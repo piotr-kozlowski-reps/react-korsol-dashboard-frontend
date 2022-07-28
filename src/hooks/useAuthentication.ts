@@ -1,38 +1,25 @@
-import { Routes, Route } from "react-router-dom";
-import { Fragment, useEffect, useState } from "react";
-import { useAuthentication } from "./hooks/useAuthentication";
-import { ThemeContextProvider } from "./contexts/theme-context";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useState } from "react";
+import { AuthResponse } from "../utils/types/app.types";
 import jwt_decode from "jwt-decode";
 
-import "./App.css";
-
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import { Login } from "./components/Login";
-
-import "./i18n";
-
-const queryClient = new QueryClient();
-
-////interfaces
-interface TokenInternalData {
-  userId: string;
-  expirationDate: string;
-  iat: number;
+interface AuthenticationReturnInterface {
+  isLoggedIn: boolean;
+  authenticate: (tokenPassed: string) => void;
 }
 
-function App() {
-  ////vars
-
-  ////temporary authentication not in custom hook - start
+export const useAuthentication = (): AuthenticationReturnInterface => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState("");
   const [tokenExpirationDate, setTokenExpirationDate] = useState<
     Date | undefined
   >(undefined);
   const [userId, setUserId] = useState<string | undefined>(undefined);
+
+  interface TokenInternalData {
+    userId: string;
+    expirationDate: string;
+    iat: number;
+  }
 
   const authenticate = (tokenPassed: string) => {
     const decoded: TokenInternalData | undefined = jwt_decode(tokenPassed);
@@ -73,27 +60,8 @@ function App() {
     );
     //localStorage - end
   };
-
-  ////temporary authentication not in custom hook - end
-
-  // const { isLoggedIn } = useAuthentication();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeContextProvider>
-        <Fragment>
-          {!isLoggedIn && <Login authenticate={authenticate} />}
-          {isLoggedIn && (
-            <Fragment>
-              <Navbar />
-              <Sidebar />
-            </Fragment>
-          )}
-        </Fragment>
-      </ThemeContextProvider>
-      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-    </QueryClientProvider>
-  );
-}
-
-export default App;
+  return {
+    isLoggedIn,
+    authenticate,
+  };
+};

@@ -1,27 +1,36 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Formik, Form, FormikHelpers, FormikProps } from "formik";
 import * as Yup from "yup";
+
 import { ClimbingBoxLoader } from "react-spinners";
+import { LoginFormValues } from "../utils/types/app.types";
 import { useTranslation } from "react-i18next";
 import { useThemeProvider } from "../contexts/theme-context";
+import { useLoginPostData } from "../hooks/useLoginPostData";
+import { useAuthentication } from "../hooks/useAuthentication";
+
 import FormikControl from "./formik-components/FormikControl";
+import Button from "./Button";
+import ErrorModal from "./ErrorModal";
 
 import korsolLogo from "../images/korsol_logo.png";
-import Button from "./Button";
+import { AxiosError } from "axios";
 
-//interfaces
-interface LoginFormValues {
-  email: string;
-  password: string;
+interface Props {
+  authenticate: (tokenPassed: string) => void;
 }
-
-export const Login = () => {
+export const Login = (props: Props) => {
   ////vars
+  const { authenticate } = props;
   const { t } = useTranslation();
   const { currentColor } = useThemeProvider();
+  const { mutate, isLoading } = useLoginPostData();
+  // const { authenticate } = useAuthentication();
+  const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Default error");
 
   ////formik
-  const initialValues: LoginFormValues = {
+  const initialValuesLoginForm: LoginFormValues = {
     email: "",
     password: "",
   };
@@ -89,47 +98,55 @@ export const Login = () => {
         },
       }),
   });
+
   const submitHandler = async (
     values: LoginFormValues,
     formikHelpers: FormikHelpers<LoginFormValues>
   ) => {
-    console.log("submitHandler");
+    const loginBody: LoginFormValues = {
+      email: values.email,
+      password: values.password,
+    };
 
-    // try {
-    //   const responseData = await sendRequest(
-    //     `${process.env.NEXT_PUBLIC_API_BASE_ADDRESS}/api/login`,
-    //     "POST",
-    //     JSON.stringify({ email: values.email, password: values.password }),
-    //     {
-    //       "Content-Type": "application/json",
-    //     }
-    //   );
-
-    //   authenticate(responseData);
-    // } catch (error) {
-    //   formikHelpers.setSubmitting(false);
-    //   formikHelpers.resetForm();
-
-    //   //confirmation modal
-    //   setIsShowConfirmationModal(true);
-    //   const timer = () => {
-    //     setTimeout(() => {
-    //       setIsShowConfirmationModal(false);
-    //     }, 1600);
-    //   };
-    //   timer();
-
-    //   clearTimeout(timer);
-    // }
-
-    // formikHelpers.setSubmitting(false);
-    // formikHelpers.resetForm();
+    mutate(loginBody, {
+      onSuccess: (data) => {
+        if (data.data.authToken) {
+          try {
+            authenticate(data.data.authToken);
+          } catch (error) {
+            throw new Error(
+              "Not implemented -> Token was not decoded -> modal or any info that somethuing went wrong"
+            );
+          }
+        }
+        //TODO: router - dashboard
+        formikHelpers.setSubmitting(false);
+        formikHelpers.resetForm();
+      },
+      onError: (error) => {
+        const axiosError: AxiosError<any, any> = error as AxiosError;
+        if (axiosError) {
+          setErrorMessage(axiosError.response?.data?.message);
+        }
+        //confirmation modal
+        setIsShowConfirmationModal(true);
+        const timer: any = () => {
+          setTimeout(() => {
+            setIsShowConfirmationModal(false);
+            formikHelpers.setSubmitting(false);
+            formikHelpers.resetForm();
+          }, 1600);
+        };
+        timer();
+        clearTimeout(timer);
+      },
+    });
   };
 
   //jsx
   return (
     <Fragment>
-      {/* {isLoading && (
+      {isLoading && (
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-main-bg dark:bg-main-dark-bg opacity-95 flex flex-col justify-center items-center">
           <ClimbingBoxLoader
             color={currentColor}
@@ -137,14 +154,14 @@ export const Login = () => {
             speedMultiplier={0.8}
           />
         </div>
-      )} */}
+      )}
 
-      {/* {isShowConfirmationModal && (
-        <ErrorModal error={error} onClear={clearError} />
-      )} */}
+      {isShowConfirmationModal && (
+        <ErrorModal error={errorMessage} onClear={() => {}} />
+      )}
 
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValuesLoginForm}
         onSubmit={submitHandler}
         validationSchema={validationSchema}
         validateOnMount={true}
@@ -217,8 +234,6 @@ export const Login = () => {
     </Fragment>
   );
 };
-
-// import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 // import { AuthResponse, LoginFormValues } from "../types/typings";
 // import axios from "axios";
