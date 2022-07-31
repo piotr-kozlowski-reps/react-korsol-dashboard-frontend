@@ -1,62 +1,21 @@
-// import React, { createContext, useContext, useState, useMemo } from "react";
-
-// ////interfaces
-// interface ThemeProviderInterface {
-//   currentColor: string;
-// }
-// interface Props {
-//   children: JSX.Element;
-// }
-
-// ////vars -> initial Data
-// const defaultState = {
-//   currentColor: "#03C9D7",
-// };
-
-// const ThemeContext = createContext<ThemeProviderInterface>(defaultState);
-
-// function useThemeProvider() {
-//   const context = useContext(ThemeContext);
-//   if (!context) {
-//     throw new Error(`useCount must be used within a CountProvider`);
-//   }
-//   return context;
-// }
-
-// const ThemeContextProvider = ({ children }: Props) => {
-//   ////vars
-//   const [currentColor, setCurrentColor] = useState("03C9D7");
-//   const value = useMemo(() => [currentColor, setCurrentColor], [currentColor]);
-//   return <ThemeContext.Provider value={value} />
-// };
-
-// // function CountProvider(props) {
-// //   const [count, setCount] = React.useState(0);
-// //   const value = React.useMemo(() => [count, setCount], [count]);
-// //   return <CountContext.Provider value={value} {...props} />;
-// // }
-
-// // export { CountProvider, useCount };
-
-// ////////
-// ////////
-// ////////
-// ////////
-// ////////
-
 import React, { createContext, useContext, useState } from "react";
+import { ColorsAvailable } from "../utils/types/app.types";
 
 ////interfaces
 interface ThemeProviderInterface {
-  currentColor: string;
+  currentColor: ColorsAvailable;
+  setColor: (color: ColorsAvailable) => void;
+  setCurrentColor: React.Dispatch<React.SetStateAction<ColorsAvailable>>;
 }
 interface Props {
   children: JSX.Element;
 }
 
 ////vars -> initial Data
-const defaultState = {
+const defaultState: ThemeProviderInterface = {
   currentColor: "#03C9D7",
+  setColor: () => {},
+  setCurrentColor: () => {},
 };
 
 ////context
@@ -64,10 +23,15 @@ const ThemeContext = createContext<ThemeProviderInterface>(defaultState);
 
 export const ThemeContextProvider = ({ children }: Props) => {
   ////vars
-  const [currentColor, setCurrentColor] = useState("#03C9D7");
+  const [currentColor, setCurrentColor] = useState<ColorsAvailable>("#03C9D7");
+
+  const setColor = (color: ColorsAvailable) => {
+    setCurrentColor(color);
+    localStorage.setItem("colorMode", color);
+  };
 
   return (
-    <ThemeContext.Provider value={{ currentColor }}>
+    <ThemeContext.Provider value={{ currentColor, setColor, setCurrentColor }}>
       {children}
     </ThemeContext.Provider>
   );

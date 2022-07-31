@@ -6,6 +6,7 @@ module.exports = {
     fontFamily: {
       display: ["Dosis", "sans-serif"],
       body: ["Dosis", "sans-serif"],
+      loading: ["Flow Rounded", "cursive"],
     },
     extend: {
       fontSize: {
