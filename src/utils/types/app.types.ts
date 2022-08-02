@@ -110,3 +110,23 @@ export type PlantVariety = {
   name: string;
   varietyCode: string;
 };
+//fields
+export type Field = {
+  fieldId: string;
+  name: string;
+  fieldNumber: number;
+  area: string;
+  details: string;
+  planter: string;
+  owner: string;
+};
+//owners
+export type Owner = {
+  ownerId: string;
+  name: string;
+};
+//planters
+export type Planter = {
+  planterId: string;
+  name: string;
+};

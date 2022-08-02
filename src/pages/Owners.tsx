@@ -17,33 +17,33 @@ import {
   Sort,
 } from "@syncfusion/ej2-react-grids";
 import {
-  useDeletePlantVarieties,
-  useGetPlantVarieties,
-} from "../hooks/usePlantVarietiesCRUDData";
-import { usePostPlantVarieties } from "../hooks/usePlantVarietiesCRUDData";
-import { usePutPlantVarieties } from "../hooks/usePlantVarietiesCRUDData";
+  useGetOwners,
+  usePostOwner,
+  usePutOwner,
+  useDeleteOwner,
+} from "../hooks/useOwnersCRUDData";
 
 import Header from "../components/Header";
-import { PlantVariety } from "../utils/types/app.types";
+import { Owner } from "../utils/types/app.types";
 
-const PlantVarieties = () => {
+const Owners = () => {
   ////vars
   const { t } = useTranslation();
   const { currentColor } = useThemeProvider();
-  const [plantVarieties, setPlantVarieties] = useState<
-    { result: PlantVariety[]; count: number } | undefined
+  const [owners, setOwners] = useState<
+    { result: Owner[]; count: number } | undefined
   >(undefined);
 
   ////CRUD
   //get
-  const { data, isFetching, isError, error } = useGetPlantVarieties();
+  const { data, isFetching, isError, error } = useGetOwners();
   useEffect(() => {
-    if (data) setPlantVarieties({ ...data.data });
+    if (data) setOwners({ ...data.data });
   }, [data]);
   //post/put
-  const { mutate: postMutate } = usePostPlantVarieties();
-  const { mutate: putMutate } = usePutPlantVarieties();
-  const { mutate: deleteMutate } = useDeletePlantVarieties();
+  const { mutate: postMutate } = usePostOwner();
+  const { mutate: putMutate } = usePutOwner();
+  const { mutate: deleteMutate } = useDeleteOwner();
 
   ////grid options
   const editOptions: EditSettingsModel = {
@@ -57,37 +57,33 @@ const PlantVarieties = () => {
   ////
   async function dataSourceChanged(state: any) {
     if (state.action === "add") {
-      console.log("add");
-      postMutate(createPlantObject(state.data.varietyCode, state.data.name));
+      postMutate(createOwnerObject(state.data.name));
       state.endEdit();
     }
     if (state.action === "edit") {
-      console.log("edit");
       putMutate(state.data);
       state.endEdit();
     }
     if (state.requestType === "delete") {
-      console.log("delete");
-      deleteMutate(state.data[0].plantId);
+      deleteMutate(state.data[0].ownerId);
       state.endEdit();
     }
   }
 
   ////utils
-  function createPlantObject(varietyCode: string, name: string) {
-    const newPlantId = uuidv4();
-    const plant: PlantVariety = {
-      plantId: newPlantId,
-      varietyCode: varietyCode,
+  function createOwnerObject(name: string) {
+    const newOwnerId = uuidv4();
+    const owner: Owner = {
+      ownerId: newOwnerId,
       name: name,
     };
-    return plant;
+    return owner;
   }
 
   ////jsx
   let content = (
     <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category={t("common:monitoring")} title={t("common:varietes")} />
+      <Header category={t("common:monitoring")} title={t("common:owners")} />
       <div className="font-loading animate-pulse">some dummy text </div>
       <div className="font-loading animate-pulse">
         somevery verydummydummytemporarytext text{" "}
@@ -95,16 +91,16 @@ const PlantVarieties = () => {
       <div className="font-loading animate-pulse">some dummy text </div>
     </div>
   );
-  if (plantVarieties) {
+  if (owners) {
     content = (
       <Fragment>
         <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
           <Header
             category={t("common:monitoring")}
-            title={t("common:varietes")}
+            title={t("common:owners")}
           />
           <GridComponent
-            dataSource={plantVarieties}
+            dataSource={owners}
             // allowSorting={true}
             // allowGrouping
             // allowPaging
@@ -116,15 +112,9 @@ const PlantVarieties = () => {
             <ColumnsDirective>
               <ColumnDirective
                 field="name"
-                headerText="Nazwa"
+                headerText="Właściciel"
                 textAlign="Center"
-                width="100%"
-              />
-              <ColumnDirective
-                field="varietyCode"
-                headerText="Kod odmiany"
-                textAlign="Center"
-                width="200"
+                width="150"
               />
             </ColumnsDirective>
             <Inject services={[Resize, Edit, Toolbar, Page, Group, Sort]} />
@@ -136,4 +126,4 @@ const PlantVarieties = () => {
   return content;
 };
 
-export default PlantVarieties;
+export default Owners;

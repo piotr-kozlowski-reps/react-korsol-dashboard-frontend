@@ -29,6 +29,9 @@ import Notifications from "./components/Notifications";
 import ThemeSettings from "./components/ThemeSettings";
 import Dashboard from "./pages/Dashboard";
 import PlantVarieties from "./pages/PlantVarieties";
+import Fields from "./pages/Fields";
+import Owners from "./pages/Owners";
+import Planters from "./pages/Planters";
 
 let logoutTimer: any;
 
@@ -304,15 +307,14 @@ function App() {
                     />
                     <Route path="/dashboard/" element={<Dashboard />} />
 
-                    {/* pages  */}
-
+                    {/* monitoring  */}
                     <Route
                       path="/plant_varieties"
                       element={<PlantVarieties />}
                     />
-                    {/* <Route path="/orders" element={<Orders />} />
-                    <Route path="/employees" element={<Employees />} />
-                    <Route path="/customers" element={<Customers />} /> */}
+                    <Route path="/fields" element={<Fields />} />
+                    <Route path="/owners" element={<Owners />} />
+                    <Route path="/planters" element={<Planters />} />
 
                     {/* apps  */}
                     {/*<Route path="/kanban" element={<Kanban />} />

@@ -40,42 +40,6 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
     "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-md text-gray-600 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2 cursor-pointer uppercase font-medium";
 
   let content = <div>sidebar...</div>;
-  if (dataTyped && isFetching) {
-    content = (
-      <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 animate-pulse">
-        <div className="flex justify-between items-center">
-          <div className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900 cursor-pointer font-loading">
-            <img
-              src={dummyLogo}
-              alt="dummy logo"
-              className="rounded-full w-9 h-9"
-            />
-            <span>dummy info</span>
-          </div>
-        </div>
-
-        <div className="mt-10 font-loading">
-          {dataTyped.data.sidebar.linksGroups.map((item, index) => (
-            <div key={index}>
-              <p className="text-gray-400 m-3 mt-4 uppercase">{item.title}</p>
-              {item.links.map((link) => (
-                <Fragment key={link.name}>
-                  <div className="ml-6">
-                    <img
-                      src={dummyLogo}
-                      alt="dummy logo"
-                      className="rounded-full w-4 h-4 inline-block opacity-20"
-                    />
-                    <span className="ml-4">{link.name}</span>
-                  </div>
-                </Fragment>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
   if (dataTyped && !isFetching) {
     content = (
       <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">
@@ -139,6 +103,42 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
         )}
       </div>
     );
+    if (dataTyped && isFetching) {
+      content = (
+        <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 animate-pulse">
+          <div className="flex justify-between items-center">
+            <div className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900 cursor-pointer font-loading">
+              <img
+                src={dummyLogo}
+                alt="dummy logo"
+                className="rounded-full w-9 h-9"
+              />
+              <span>dummy info</span>
+            </div>
+          </div>
+
+          <div className="mt-10 font-loading">
+            {dataTyped.data.sidebar.linksGroups.map((item, index) => (
+              <div key={index}>
+                <p className="text-gray-400 m-3 mt-4 uppercase">{item.title}</p>
+                {item.links.map((link) => (
+                  <Fragment key={link.name}>
+                    <div className="ml-6">
+                      <img
+                        src={dummyLogo}
+                        alt="dummy logo"
+                        className="rounded-full w-4 h-4 inline-block opacity-20"
+                      />
+                      <span className="ml-4">{link.name}</span>
+                    </div>
+                  </Fragment>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
 
     if (isError) {
       content = (

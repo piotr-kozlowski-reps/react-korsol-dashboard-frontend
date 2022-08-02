@@ -36,7 +36,7 @@ const UserProfile = ({ userId, handleClickOff, logoutHandler }: Props) => {
           onClick={() => {
             handleClickOff("userProfile");
           }}
-          className="text-xl rounded-full p-3 hover:bg-light-gray  block hover:shadow-lg"
+          className="text-xl rounded-full p-3 hover:bg-light-gray  block hover:shadow-lg dark:text-white dark:hover:text-black"
         >
           <MdOutlineCancel />
         </button>
@@ -49,29 +49,29 @@ const UserProfile = ({ userId, handleClickOff, logoutHandler }: Props) => {
           className="rounded-full h-24 w-24"
         />
         <div>
-          <p className="font-semibold text-xl dark:text-gray-400">
+          <p className="font-semibold text-xl dark:text-gray-200">
             {userProfileName
               ? `${userProfileName} ${userProfileSurname}`
               : t("common:unknown")}
           </p>
-          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">
+          <p className="text-gray-500 text-sm font-semibold dark:text-gray-200">
             {userProfileEmail ? userProfileEmail : t("common:unknown")}
           </p>
         </div>
       </div>
 
       <div
-        className="flex items-center gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer dark:hover:bg-[#42464D]"
+        className="flex group items-center gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer dark:hover:bg-light-gray rounded-lg"
         onClick={() => alert("not implemented")}
       >
         <button
           type="button"
-          className="text-xl rounded-lg p-3 hover:bg-light-gray"
+          className="text-xl dark:text-gray-200 rounded-lg p-3 dark:group-hover:text-black"
         >
           <AiOutlineUser />
         </button>
         <div>
-          <p className="font-semibold dark:text-gray-200">
+          <p className="font-semibold dark:text-gray-200 dark:group-hover:text-black">
             {t("common:yourProfile")}
           </p>
         </div>

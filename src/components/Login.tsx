@@ -175,7 +175,7 @@ export const Login = (props: Props) => {
                       <img
                         src={korsolLogo}
                         alt="korsol logo"
-                        className="rounded-full w-14 h-14"
+                        className="rounded-full w-14 h-14 dark:border-2"
                       />
                     </div>
 

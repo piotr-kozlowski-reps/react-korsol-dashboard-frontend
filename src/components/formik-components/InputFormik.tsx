@@ -76,8 +76,10 @@ const InputFormik = (props: any) => {
                 value={value}
                 {...rest}
                 onChange={(val) => onChange(val)}
-                className={`group-focus:border-b-2 transition-all ease-out duration-200 min-w-full ml-2 p-2 bg-main-bg dark:bg-main-dark-bg outline-none rounded-sm border-b-2 border-[#fafbfb] ${
-                  isErrorPresent && isTouched ? "bg-red-100 text-black" : ""
+                className={`group-focus:border-b-2 transition-all ease-out duration-200 min-w-full ml-2 p-2 bg-main-bg dark:bg-main-dark-bg outline-none rounded-sm border-b-2 border-[#fafbfb] dark:border-[#555] ${
+                  isErrorPresent && isTouched
+                    ? "bg-red-100 text-black dark:bg-red-700 dark:text-white"
+                    : ""
                 }`}
                 style={{ borderColor: isFocused ? currentColor : "" }}
                 onFocus={focusInHandler}

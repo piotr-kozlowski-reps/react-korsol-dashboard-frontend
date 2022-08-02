@@ -104,7 +104,7 @@ export const usePutPlantVarieties = () => {
 
 ////DELETE
 const deletePlantVarieties = (plantId: string) =>
-  axios.put(
+  axios.delete(
     `${process.env.REACT_APP_BACKEND_URL}/api/plant-varieties/${plantId}`,
     {
       headers: {

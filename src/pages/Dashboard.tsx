@@ -19,8 +19,8 @@ const Dashboard = () => {
   ////JSX
   return (
     <div className="mt-12">
-      <div className="absolute w-full h-full bg-main-bg opacity-80 z-50 p-44 pt-20">
-        <p className="font-bold text-3xl text-black ">
+      <div className="absolute w-full h-full bg-main-bg opacity-80 z-50 p-44 pt-20 dark:bg-main-dark-bg">
+        <p className="font-bold text-3xl text-black dark:text-white">
           Przykładowe rzeczy, wstawię tu co sobie życzysz .....
         </p>
       </div>
