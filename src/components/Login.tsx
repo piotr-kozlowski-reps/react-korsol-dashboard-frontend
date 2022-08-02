@@ -119,7 +119,6 @@ export const Login = (props: Props) => {
             );
           }
         }
-        //TODO: router - dashboard
         formikHelpers.setSubmitting(false);
         formikHelpers.resetForm();
       },
