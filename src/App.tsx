@@ -301,10 +301,7 @@ function App() {
 
                   <Routes>
                     {/* dashboard  */}
-                    <Route
-                      path="/"
-                      element={<Navigate to={`/pl/projects`} />}
-                    />
+                    <Route path="/" element={<Navigate to={`/dashboard/`} />} />
                     <Route path="/dashboard/" element={<Dashboard />} />
 
                     {/* monitoring  */}

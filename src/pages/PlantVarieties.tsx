@@ -15,6 +15,7 @@ import {
   Group,
   EditSettingsModel,
   Sort,
+  DataResult,
 } from "@syncfusion/ej2-react-grids";
 import {
   useDeletePlantVarieties,
@@ -26,13 +27,20 @@ import { usePutPlantVarieties } from "../hooks/usePlantVarietiesCRUDData";
 import Header from "../components/Header";
 import { PlantVariety } from "../utils/types/app.types";
 
+//interface
+type PlantVarietiesType =
+  | {
+      result: PlantVariety[];
+      count: number;
+    }
+  | undefined;
+
 const PlantVarieties = () => {
   ////vars
   const { t } = useTranslation();
   const { currentColor } = useThemeProvider();
-  const [plantVarieties, setPlantVarieties] = useState<
-    { result: PlantVariety[]; count: number } | undefined
-  >(undefined);
+  const [plantVarieties, setPlantVarieties] =
+    useState<PlantVarietiesType>(undefined);
 
   ////CRUD
   //get
@@ -73,6 +81,48 @@ const PlantVarieties = () => {
     }
   }
 
+  // async function dataStateChanged(state: any) {
+  //   console.log(state);
+
+  //   if (state.action.requestType === "sorting") {
+  //     console.log("sorting");
+  //     console.log("column: " + state.action.columnName);
+  //     console.log("direction: " + state.action.direction);
+  //     sortStateData(
+  //       plantVarieties,
+  //       state.action.columnName,
+  //       state.action.direction
+  //     ).then((resultData) => {
+  //       console.log(resultData);
+  //       setPlantVarieties(resultData);
+  //       return true;
+  //     });
+  //   }
+
+  //   //     dataStateChange: function (state) {
+  //   //     if (
+  //   //       state.action &&
+  //   //       (state.action.requestType === "filterchoicerequest" ||
+  //   //         state.action.requestType === "filtersearchbegin" ||
+  //   //         state.action.requestType === "stringfilterrequest")
+  //   //     ) {
+  //   //       // below code will executed when
+  //   //       // 1. opening the Excel Filter dialog, Menu Filter dialog
+  //   //       // 2. searching the value in excel filter dialog and
+
+  //   //       this.orderService.execute(state).then((gridData) => {
+  //   //         debugger;
+  //   //         state.dataSource(gridData.result);
+  //   //       });
+  //   //     } else {
+  //   //       // Handled the other Grid actions like paging, sorting etc.. by using dataState change event
+  //   //       this.orderService.execute(state).then((gridData) => {
+  //   //         this.data = gridData;
+  //   //       });
+  //   //     }
+  //   //   },
+  // }
+
   ////utils
   function createPlantObject(varietyCode: string, name: string) {
     const newPlantId = uuidv4();
@@ -84,15 +134,23 @@ const PlantVarieties = () => {
     return plant;
   }
 
+  // async function sortStateData(
+  //   data: any,
+  //   columnName: string,
+  //   direction: string
+  // ): Promise<PlantVarietiesType> {
+  //   return plantVarieties;
+  // }
+
   ////jsx
   let content = (
     <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
       <Header category={t("common:monitoring")} title={t("common:varietes")} />
-      <div className="font-loading animate-pulse">some dummy text </div>
+      <div className="font-loading animate-pulse">aaaa aaaaa aaaa</div>
       <div className="font-loading animate-pulse">
-        somevery verydummydummytemporarytext text{" "}
+        aaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaa aaaa
       </div>
-      <div className="font-loading animate-pulse">some dummy text </div>
+      <div className="font-loading animate-pulse">aaaa aaaaa aaaa</div>
     </div>
   );
   if (plantVarieties) {
@@ -112,6 +170,7 @@ const PlantVarieties = () => {
             toolbar={toolbarOptions}
             editSettings={editOptions}
             dataSourceChanged={dataSourceChanged}
+            // dataStateChange={dataStateChanged}
           >
             <ColumnsDirective>
               <ColumnDirective
