@@ -4,13 +4,11 @@ import { useThemeProvider } from "../contexts/theme-context";
 import { useConfigGetData } from "../hooks/useConfigGetData";
 import { Link, NavLink } from "react-router-dom";
 import dummyLogo from "../images/dummy_logo.png";
-
+import { ConfigFetched } from "../utils/types/app.types";
+import { AxiosError, AxiosResponse } from "axios";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { Tooltip } from "@material-tailwind/react";
 import { MdOutlineCancel } from "react-icons/md";
 import SVGStringIntoComponentMaker from "../utils/SVGStringIntoComponentMaker";
-import { motion } from "framer-motion";
-import { containerVariants } from "../utils/framerMotionAnimationsVariants";
 
 interface Props {
   userId: string;
@@ -44,13 +42,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
   let content = <div>sidebar...</div>;
   if (dataTyped && !isFetching) {
     content = (
-      <motion.div
-        className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      >
+      <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">
         {activeMenu && (
           <Fragment>
             <div className="flex justify-between items-center">
@@ -68,11 +60,10 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
                   <span>{dataTyped.data.sidebar.companyName}</span>
                 </div>
               </Link>
-              {/* <TooltipComponent
+              <TooltipComponent
                 content={t("common:menu")}
                 position="BottomCenter"
-              > */}
-              <Tooltip content="kuku" placement="bottom">
+              >
                 <button
                   type="button"
                   onClick={() =>
@@ -82,8 +73,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
                 >
                   <MdOutlineCancel />
                 </button>
-              </Tooltip>
-              {/* </TooltipComponent> */}
+              </TooltipComponent>
             </div>
             <div className="mt-10">
               {dataTyped.data.sidebar.linksGroups.map((item, index) => (
@@ -111,17 +101,11 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
             </div>
           </Fragment>
         )}
-      </motion.div>
+      </div>
     );
     if (dataTyped && isFetching) {
       content = (
-        <motion.div
-          className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 animate-pulse"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
+        <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 animate-pulse">
           <div className="flex justify-between items-center">
             <div className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900 cursor-pointer font-loading">
               <img
@@ -152,21 +136,15 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       );
     }
 
     if (isError) {
       content = (
-        <motion.div
-          className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 text-center"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
+        <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 text-center">
           Błąd przy pobieraniu danych
-        </motion.div>
+        </div>
       );
     }
   }

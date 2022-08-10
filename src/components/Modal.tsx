@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
+import { CSSTransition } from "react-transition-group";
+
 import Backdrop from "./Backdrop";
-import { AnimatePresence, motion } from "framer-motion";
-import { errorModalVariants } from "../utils/framerMotionAnimationsVariants";
 
 interface ModalOverlayProps {
   className?: string;
@@ -28,16 +28,12 @@ interface ModalProps {
 
 const ModalOverlay = (props: ModalOverlayProps) => {
   const content = (
-    <motion.div
+    <div
       className={`z-50 fixed top-1/4 left-1/4 w-1/2 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-4 pt-6 rounded-2xl px-8 shadow-xl ${
         props.className ? props.className : ""
       }`}
       style={props.style}
       data-testid="modal"
-      variants={errorModalVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
     >
       <header
         className={`w-full dark:text-gray-200 font-bold uppercase text-3xl text-center ${
@@ -54,7 +50,7 @@ const ModalOverlay = (props: ModalOverlayProps) => {
           {props.footer}
         </footer>
       </div>
-    </motion.div>
+    </div>
   );
   return ReactDOM.createPortal(content, document.getElementById("modal-hook")!);
 };
@@ -63,9 +59,15 @@ const Modal = (props: ModalProps) => {
   return (
     <Fragment>
       {props.show && <Backdrop onClick={props.onCancel} />}
-      <div>
+      <CSSTransition
+        in={props.show}
+        mountOnEnter
+        unmountOnExit
+        timeout={200}
+        classNames="modal"
+      >
         <ModalOverlay {...props} />
-      </div>
+      </CSSTransition>
     </Fragment>
   );
 };
