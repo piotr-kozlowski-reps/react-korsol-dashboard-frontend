@@ -22,18 +22,15 @@ export const containerVariants = {
 
 export const errorModalVariants = {
   hidden: {
-    y: `${pixelMoveContainerAmount}px`,
     scale: 0.4,
     opacity: 0,
   },
   visible: {
-    y: 0,
     scale: 1,
     opacity: 1,
     transition: { duration: 0.3 },
   },
   exit: {
-    y: `-${pixelMoveContainerAmount}px`,
     opacity: 0,
     scale: 0.4,
     transition: { ease: "easeInOut", duration: 0.3 },

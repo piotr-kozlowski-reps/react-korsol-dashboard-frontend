@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Formik, Form, FormikHelpers, FormikProps } from "formik";
 import * as Yup from "yup";
 
@@ -7,7 +7,8 @@ import { LoginFormValues } from "../utils/types/app.types";
 import { useTranslation } from "react-i18next";
 import { useThemeProvider } from "../contexts/theme-context";
 import { useLoginPostData } from "../hooks/useLoginPostData";
-import { useAuthentication } from "../hooks/useAuthentication";
+import { AnimatePresence, motion } from "framer-motion";
+import { containerVariants } from "../utils/framerMotionAnimationsVariants";
 
 import FormikControl from "./formik-components/FormikControl";
 import Button from "./Button";
@@ -146,18 +147,25 @@ export const Login = (props: Props) => {
   return (
     <Fragment>
       {isLoading && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-main-bg dark:bg-main-dark-bg opacity-95 flex flex-col justify-center items-center">
+        <motion.div
+          className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-main-bg dark:bg-main-dark-bg opacity-95 flex flex-col justify-center items-center"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
           <ClimbingBoxLoader
             color={currentColor}
             size={12}
             speedMultiplier={0.8}
           />
-        </div>
+        </motion.div>
       )}
-
-      {isShowConfirmationModal && (
-        <ErrorModal error={errorMessage} onClear={() => {}} />
-      )}
+      <AnimatePresence>
+        {isShowConfirmationModal && (
+          <ErrorModal error={errorMessage} onClear={() => {}} />
+        )}
+      </AnimatePresence>
 
       <Formik
         initialValues={initialValuesLoginForm}
@@ -168,7 +176,13 @@ export const Login = (props: Props) => {
         {(formik: FormikProps<LoginFormValues>) => {
           return (
             <Form>
-              <div className="min-h-screen flex flex-col items-center justify-center bg-main-bg dark:bg-main-dark-bg ">
+              <motion.div
+                className="min-h-screen flex flex-col items-center justify-center bg-main-bg dark:bg-main-dark-bg "
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
                 <div className="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg  p-4 pt-6 rounded-2xl px-8 shadow-xl">
                   <div className="flex flex-col justify-center items-center">
                     <div>
@@ -225,7 +239,7 @@ export const Login = (props: Props) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </Form>
           );
         }}
@@ -233,65 +247,3 @@ export const Login = (props: Props) => {
     </Fragment>
   );
 };
-
-// import { AuthResponse, LoginFormValues } from "../types/typings";
-// import axios from "axios";
-// import { useRouter } from "next/router";
-// import { useHttpClient } from "../hooks/http-hook";
-
-// import Button from "../components/Button";
-// import FormikControl from "../components/formik-components/FormikControl";
-// import ErrorModal from "../components/ErrorModal";
-
-// const Login: NextPage = (props) => {
-//   ////vars
-//   const { isLoggedIn, authenticate, expirationDate } = useAuthContext();
-//   const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(true);
-//   const router = useRouter();
-//   const { isLoading, error, sendRequest, clearError } =
-//     useHttpClient<AuthResponse>();
-
-//   const submitHandler = async (
-//     values: LoginFormValues,
-//     formikHelpers: FormikHelpers<LoginFormValues>
-//   ) => {
-//     try {
-//       const responseData = await sendRequest(
-//         `${process.env.NEXT_PUBLIC_API_BASE_ADDRESS}/api/login`,
-//         "POST",
-//         JSON.stringify({ email: values.email, password: values.password }),
-//         {
-//           "Content-Type": "application/json",
-//         }
-//       );
-
-//       authenticate(responseData);
-//     } catch (error) {
-//       formikHelpers.setSubmitting(false);
-//       formikHelpers.resetForm();
-
-//       //confirmation modal
-//       setIsShowConfirmationModal(true);
-//       const timer = () => {
-//         setTimeout(() => {
-//           setIsShowConfirmationModal(false);
-//         }, 1600);
-//       };
-//       timer();
-
-//       clearTimeout(timer);
-//     }
-
-//     formikHelpers.setSubmitting(false);
-//     formikHelpers.resetForm();
-//   };
-
-//   //redirect when logged in
-//   useEffect(() => {
-//     if (isLoggedIn) router.push("/");
-//   }, [isLoggedIn]);
-
-//
-// };
-
-// export default Login;
