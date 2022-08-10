@@ -32,6 +32,7 @@ import PlantVarieties from "./pages/PlantVarieties";
 import Fields from "./pages/Fields";
 import Owners from "./pages/Owners";
 import Planters from "./pages/Planters";
+import { AnimatePresence } from "framer-motion";
 
 let logoutTimer: any;
 
@@ -298,29 +299,32 @@ function App() {
                       themeColors={themeColors}
                     />
                   )}
+                  <AnimatePresence>
+                    <Routes>
+                      {/* dashboard  */}
+                      <Route
+                        path="/"
+                        element={<Navigate to={`/dashboard/`} />}
+                      />
+                      <Route path="/dashboard/" element={<Dashboard />} />
 
-                  <Routes>
-                    {/* dashboard  */}
-                    <Route path="/" element={<Navigate to={`/dashboard/`} />} />
-                    <Route path="/dashboard/" element={<Dashboard />} />
+                      {/* monitoring  */}
+                      <Route
+                        path="/plant_varieties"
+                        element={<PlantVarieties />}
+                      />
+                      <Route path="/fields" element={<Fields />} />
+                      <Route path="/owners" element={<Owners />} />
+                      <Route path="/planters" element={<Planters />} />
 
-                    {/* monitoring  */}
-                    <Route
-                      path="/plant_varieties"
-                      element={<PlantVarieties />}
-                    />
-                    <Route path="/fields" element={<Fields />} />
-                    <Route path="/owners" element={<Owners />} />
-                    <Route path="/planters" element={<Planters />} />
-
-                    {/* apps  */}
-                    {/*<Route path="/kanban" element={<Kanban />} />
+                      {/* apps  */}
+                      {/*<Route path="/kanban" element={<Kanban />} />
                      <Route path="/editor" element={<Editor />} />
                     <Route path="/calendar" element={<Calendar />} />
                     <Route path="/color-picker" element={<ColorPicker />} /> */}
 
-                    {/* charts  */}
-                    {/* <Route path="/line" element={<Line />} />
+                      {/* charts  */}
+                      {/* <Route path="/line" element={<Line />} />
                     <Route path="/area" element={<Area />} />
                     <Route path="/bar" element={<Bar />} />
                     <Route path="/pie" element={<Pie />} />
@@ -328,7 +332,8 @@ function App() {
                     <Route path="/color-mapping" element={<ColorMapping />} />
                     <Route path="/pyramid" element={<Pyramid />} />
                     <Route path="/stacked" element={<Stacked />} /> */}
-                  </Routes>
+                    </Routes>
+                  </AnimatePresence>
                 </div>
               </div>
             </Fragment>

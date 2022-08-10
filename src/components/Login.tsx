@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Formik, Form, FormikHelpers, FormikProps } from "formik";
 import * as Yup from "yup";
 
@@ -7,7 +7,7 @@ import { LoginFormValues } from "../utils/types/app.types";
 import { useTranslation } from "react-i18next";
 import { useThemeProvider } from "../contexts/theme-context";
 import { useLoginPostData } from "../hooks/useLoginPostData";
-import { useAuthentication } from "../hooks/useAuthentication";
+import { motion } from "framer-motion";
 
 import FormikControl from "./formik-components/FormikControl";
 import Button from "./Button";
@@ -15,6 +15,7 @@ import ErrorModal from "./ErrorModal";
 
 import korsolLogo from "../images/korsol_logo.png";
 import { AxiosError } from "axios";
+import { containerVariants } from "../utils/framerMotionAnimationsVariants";
 
 interface Props {
   authenticate: (tokenPassed: string) => void;
@@ -144,15 +145,26 @@ export const Login = (props: Props) => {
 
   //jsx
   return (
-    <Fragment>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       {isLoading && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-main-bg dark:bg-main-dark-bg opacity-95 flex flex-col justify-center items-center">
+        <motion.div
+          className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-main-bg dark:bg-main-dark-bg opacity-95 flex flex-col justify-center items-center"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
           <ClimbingBoxLoader
             color={currentColor}
             size={12}
             speedMultiplier={0.8}
           />
-        </div>
+        </motion.div>
       )}
 
       {isShowConfirmationModal && (
@@ -230,7 +242,7 @@ export const Login = (props: Props) => {
           );
         }}
       </Formik>
-    </Fragment>
+    </motion.div>
   );
 };
 

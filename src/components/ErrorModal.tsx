@@ -2,6 +2,8 @@ import React from "react";
 
 import Modal from "./Modal";
 import Button from "./Button";
+import { AnimatePresence, motion } from "framer-motion";
+import { errorModalVariants } from "../utils/framerMotionAnimationsVariants";
 
 interface ErrorModalProps {
   onClear: () => void;
