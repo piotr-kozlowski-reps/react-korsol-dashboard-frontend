@@ -6,9 +6,17 @@ import { Link, NavLink } from "react-router-dom";
 import dummyLogo from "../images/dummy_logo.png";
 import { ConfigFetched } from "../utils/types/app.types";
 import { AxiosError, AxiosResponse } from "axios";
-import { TooltipComponent } from "@syncfusion/ej2-react-popups";
+// import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { MdOutlineCancel } from "react-icons/md";
 import SVGStringIntoComponentMaker from "../utils/SVGStringIntoComponentMaker";
+import { Tooltip } from "@material-tailwind/react";
+import { tooltipMain } from "../utils/materialTailwind";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  containerVariants,
+  fromLeftMoveDelayedVariants,
+  fromLeftMoveVariants,
+} from "../utils/framerMotionAnimationsVariants";
 
 interface Props {
   userId: string;
@@ -42,11 +50,16 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
   let content = <div>sidebar...</div>;
   if (dataTyped && !isFetching) {
     content = (
-      <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">
+      <motion.div
+        className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10"
+        variants={fromLeftMoveVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
         {activeMenu && (
           <Fragment>
             <div className="flex justify-between items-center">
-              {/* //TODO: link dobry */}
               <Link to="/dashboard">
                 <div
                   onClick={handleCloseSideBar}
@@ -60,9 +73,11 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
                   <span>{dataTyped.data.sidebar.companyName}</span>
                 </div>
               </Link>
-              <TooltipComponent
+
+              <Tooltip
                 content={t("common:menu")}
-                position="BottomCenter"
+                placement="bottom"
+                {...tooltipMain}
               >
                 <button
                   type="button"
@@ -73,39 +88,55 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
                 >
                   <MdOutlineCancel />
                 </button>
-              </TooltipComponent>
+              </Tooltip>
             </div>
             <div className="mt-10">
               {dataTyped.data.sidebar.linksGroups.map((item, index) => (
-                <div key={index}>
+                <motion.div key={index}>
                   <p className="text-gray-400 m-3 mt-4 uppercase">
                     {item.title}
                   </p>
                   {item.links.map((link) => (
-                    <NavLink
-                      to={`/${link.route}`}
-                      key={link.name}
-                      style={({ isActive }) => ({
-                        backgroundColor: isActive ? currentColor : "",
-                      })}
-                      className={({ isActive }) =>
-                        isActive ? activeLink : normalLink
-                      }
+                    <motion.div
+                      className="ml-6"
+                      variants={fromLeftMoveDelayedVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
                     >
-                      <SVGStringIntoComponentMaker keyToMap={link.reactIcon} />
-                      <span className="uppercase">{link.name}</span>
-                    </NavLink>
+                      <NavLink
+                        to={`/${link.route}`}
+                        key={link.name}
+                        style={({ isActive }) => ({
+                          backgroundColor: isActive ? currentColor : "",
+                        })}
+                        className={({ isActive }) =>
+                          isActive ? activeLink : normalLink
+                        }
+                      >
+                        <SVGStringIntoComponentMaker
+                          keyToMap={link.reactIcon}
+                        />
+                        <span className="uppercase">{link.name}</span>
+                      </NavLink>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               ))}
             </div>
           </Fragment>
         )}
-      </div>
+      </motion.div>
     );
     if (dataTyped && isFetching) {
       content = (
-        <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 animate-pulse">
+        <motion.div
+          className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 animate-pulse"
+          variants={fromLeftMoveVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
           <div className="flex justify-between items-center">
             <div className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900 cursor-pointer font-loading">
               <img
@@ -122,21 +153,27 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
               <div key={index}>
                 <p className="text-gray-400 m-3 mt-4 uppercase">{item.title}</p>
                 {item.links.map((link) => (
-                  <Fragment key={link.name}>
-                    <div className="ml-6">
+                  <div key={link.name}>
+                    <motion.div
+                      className="ml-6"
+                      variants={fromLeftMoveDelayedVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
                       <img
                         src={dummyLogo}
                         alt="dummy logo"
                         className="rounded-full w-4 h-4 inline-block opacity-20"
                       />
                       <span className="ml-4">{link.name}</span>
-                    </div>
-                  </Fragment>
+                    </motion.div>
+                  </div>
                 ))}
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       );
     }
 
@@ -149,7 +186,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
     }
   }
   ////jsx
-  return content;
+  return <AnimatePresence>{content}</AnimatePresence>;
 };
 
 export default Sidebar;

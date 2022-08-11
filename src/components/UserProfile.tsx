@@ -7,6 +7,10 @@ import { WhichMenuItemClicked } from "../utils/types/app.types";
 import dummyProfilePhoto from "../images/avatar_dummy.jpg";
 import Button from "./Button";
 import { useGetConfigDataWithoutFetching } from "../hooks/useGetConfigDataWithoutFetching";
+import { Tooltip } from "@material-tailwind/react";
+import { tooltipMain } from "../utils/materialTailwind";
+import { motion } from "framer-motion";
+import { containerVariants } from "../utils/framerMotionAnimationsVariants";
 
 interface Props {
   userId: string;
@@ -26,20 +30,32 @@ const UserProfile = ({ userId, handleClickOff, logoutHandler }: Props) => {
   } = useGetConfigDataWithoutFetching();
 
   return (
-    <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96 shadow-2xl">
+    <motion.div
+      className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96 shadow-2xl"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div className="flex justify-between items-center ">
         <p className="font-semibold text-lg dark:text-gray-200">
           {t("common:userProfile")}
         </p>
-        <button
-          type="button"
-          onClick={() => {
-            handleClickOff("userProfile");
-          }}
-          className="text-xl rounded-full p-3 hover:bg-light-gray  block hover:shadow-lg dark:text-white dark:hover:text-black"
+        <Tooltip
+          content={t("common:close")}
+          placement="bottom"
+          {...tooltipMain}
         >
-          <MdOutlineCancel />
-        </button>
+          <button
+            type="button"
+            onClick={() => {
+              handleClickOff("userProfile");
+            }}
+            className="text-xl rounded-full p-3 hover:bg-light-gray  block hover:shadow-lg dark:text-white dark:hover:text-black"
+          >
+            <MdOutlineCancel />
+          </button>
+        </Tooltip>
       </div>
 
       <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
@@ -88,7 +104,7 @@ const UserProfile = ({ userId, handleClickOff, logoutHandler }: Props) => {
           onClick={logoutHandler}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

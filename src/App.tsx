@@ -7,7 +7,6 @@ import jwt_decode from "jwt-decode";
 import { useTranslation } from "react-i18next";
 import { FiSettings } from "react-icons/fi";
 import { useThemeProvider } from "./contexts/theme-context";
-import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { getDataFromLocalStorage } from "./utils/localStorageUtils";
 import { themeColors } from "./data/theme-colors";
 import { AnimatePresence } from "framer-motion";
@@ -34,6 +33,9 @@ import PlantVarieties from "./pages/PlantVarieties";
 import Fields from "./pages/Fields";
 import Owners from "./pages/Owners";
 import Planters from "./pages/Planters";
+import { Tooltip } from "@material-tailwind/react";
+import { tooltipMain } from "./utils/materialTailwind";
+import Companies from "./pages/Companies";
 
 let logoutTimer: any;
 
@@ -231,9 +233,10 @@ function App() {
                   className="fixed right-4 bottom-4"
                   style={{ zIndex: "1000" }}
                 >
-                  <TooltipComponent
+                  <Tooltip
                     content={t("common:settings")}
-                    position="TopLeft"
+                    placement="top-start"
+                    {...tooltipMain}
                   >
                     <button
                       type="button"
@@ -246,27 +249,30 @@ function App() {
                     >
                       <FiSettings />
                     </button>
-                  </TooltipComponent>
+                  </Tooltip>
                 </div>
-                {activeMenu ? (
-                  <div className="w-80 fixed sidebar dark:bg-secondary-dark-bg bg-white">
-                    <Sidebar
-                      userId={userId}
-                      activeMenu={activeMenu}
-                      setActiveMenu={setActiveMenu}
-                      screenSize={screenSize}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-0 dark:bg-secondary-dark-bg">
-                    <Sidebar
-                      userId={userId}
-                      activeMenu={activeMenu}
-                      setActiveMenu={setActiveMenu}
-                      screenSize={screenSize}
-                    />
-                  </div>
-                )}
+                <AnimatePresence>
+                  {activeMenu ? (
+                    <div className="w-80 fixed sidebar dark:bg-secondary-dark-bg bg-white">
+                      <Sidebar
+                        userId={userId}
+                        activeMenu={activeMenu}
+                        setActiveMenu={setActiveMenu}
+                        screenSize={screenSize}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-0 dark:bg-secondary-dark-bg">
+                      <Sidebar
+                        userId={userId}
+                        activeMenu={activeMenu}
+                        setActiveMenu={setActiveMenu}
+                        screenSize={screenSize}
+                      />
+                    </div>
+                  )}
+                </AnimatePresence>
+
                 <div
                   className={`dark:bg-main-dark-bg bg-main-bg min-h-screen w-full ${
                     activeMenu ? "md:ml-80" : " flex-2"
@@ -292,14 +298,16 @@ function App() {
                       }
                     />
                   </div>
-                  {themeSettings && (
-                    <ThemeSettings
-                      setThemeSettings={setThemeSettings}
-                      currentMode={currentMode}
-                      setMode={setMode}
-                      themeColors={themeColors}
-                    />
-                  )}
+                  <AnimatePresence>
+                    {themeSettings && (
+                      <ThemeSettings
+                        setThemeSettings={setThemeSettings}
+                        currentMode={currentMode}
+                        setMode={setMode}
+                        themeColors={themeColors}
+                      />
+                    )}
+                  </AnimatePresence>
                   <AnimatePresence>
                     <Routes>
                       {/* dashboard  */}
@@ -314,6 +322,7 @@ function App() {
                         path="/plant_varieties"
                         element={<PlantVarieties />}
                       />
+                      <Route path="/companies" element={<Companies />} />
                       <Route path="/fields" element={<Fields />} />
                       <Route path="/owners" element={<Owners />} />
                       <Route path="/planters" element={<Planters />} />

@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const withMT = require("@material-tailwind/react/utils/withMT");
+
+module.exports = withMT({
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class",
   theme: {
@@ -44,7 +46,10 @@ module.exports = {
         "hero-pattern":
           "url('https://res.cloudinary.com/dn8l30dkf/image/upload/v1656488020/korsol-dashboard/landscape-agriculture_ydgpqf.png')",
       },
+      zIndex: {
+        max: "10000001",
+      },
     },
   },
   plugins: [],
-};
+});

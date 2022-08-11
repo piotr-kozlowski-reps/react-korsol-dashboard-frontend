@@ -1,4 +1,3 @@
-import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import React, { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -6,12 +5,16 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { RiNotification3Line } from "react-icons/ri";
 import { useThemeProvider } from "../contexts/theme-context";
 import { useConfigGetData } from "../hooks/useConfigGetData";
+import { Tooltip } from "@material-tailwind/react";
+import { tooltipMain } from "../utils/materialTailwind";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   NavbarMenuIsClicked,
   WhichMenuItemClicked,
 } from "../utils/types/app.types";
 
 import dummyProfilImage from "../images/avatar_dummy.jpg";
+import { fromLeftMoveVariants } from "../utils/framerMotionAnimationsVariants";
 
 ////navButton
 interface NavButtonProps {
@@ -28,7 +31,7 @@ const NavButton = ({
   color,
   dotColor,
 }: NavButtonProps) => (
-  <TooltipComponent content={title} position="BottomCenter">
+  <Tooltip content={title} placement="bottom" {...tooltipMain}>
     <button
       type="button"
       onClick={customFunction}
@@ -41,7 +44,7 @@ const NavButton = ({
       />
       {icon}
     </button>
-  </TooltipComponent>
+  </Tooltip>
 );
 
 ////navbar
@@ -73,7 +76,13 @@ const Navbar = ({
   let content = <div>NavBar</div>;
   if (dataTyped && isFetching) {
     content = (
-      <div className="flex justify-between p-2 md: mx-6 relative animate-pulse">
+      <motion.div
+        className="flex justify-between p-2 md: mx-6 relative animate-pulse"
+        variants={fromLeftMoveVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
         <NavButton
           title={t("common:menu")}
           customFunction={() => {}}
@@ -88,9 +97,11 @@ const Navbar = ({
             dotColor="#03C9D7"
             icon={<RiNotification3Line />}
           />
-          <TooltipComponent
+
+          <Tooltip
             content={t("common:profile")}
-            position="BottomCenter"
+            placement="bottom"
+            {...tooltipMain}
           >
             <div
               className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg"
@@ -111,14 +122,20 @@ const Navbar = ({
               </p>
               <MdKeyboardArrowDown className="text-gray-400 text-14" />
             </div>
-          </TooltipComponent>
+          </Tooltip>
         </div>
-      </div>
+      </motion.div>
     );
   }
   if (dataTyped && !isFetching) {
     content = (
-      <div className="flex justify-between p-2 md: mx-6 relative">
+      <motion.div
+        className="flex justify-between p-2 md: mx-6 relative"
+        variants={fromLeftMoveVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
         <NavButton
           title={t("common:menu")}
           customFunction={() =>
@@ -135,9 +152,11 @@ const Navbar = ({
             dotColor="#03C9D7"
             icon={<RiNotification3Line />}
           />
-          <TooltipComponent
+
+          <Tooltip
             content={t("common:profile")}
-            position="BottomCenter"
+            placement="bottom"
+            {...tooltipMain}
           >
             <div
               className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg"
@@ -158,12 +177,16 @@ const Navbar = ({
               </p>
               <MdKeyboardArrowDown className="text-gray-400 text-14" />
             </div>
-          </TooltipComponent>
+          </Tooltip>
 
-          {isClicked.notification && notifications}
-          {isClicked.userProfile && userProfile}
+          <AnimatePresence>
+            {isClicked.notification && notifications}
+          </AnimatePresence>
+          <AnimatePresence>
+            {isClicked.userProfile && userProfile}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     );
   }
   ////jsx
@@ -171,30 +194,3 @@ const Navbar = ({
 };
 
 export default Navbar;
-
-// import React, {
-//   ButtonHTMLAttributes,
-//   DetailedHTMLProps,
-//   useEffect,
-// } from "react";
-
-// import type { WhichMenuItemClicked } from "../types/typings";
-
-// const Navbar: NextComponentType = () => {
-//
-//
-//   const {
-//     isClicked,
-//     setIsClicked,
-//     handleClickOn,
-
-//   } = useStateContext();
-
-//   //fetching data
-//   const { data: configFetched } = useSWR<ConfigFetched>("/api/config/1234");
-
-//   ////jsx
-//   return
-// };
-
-// export default Navbar;

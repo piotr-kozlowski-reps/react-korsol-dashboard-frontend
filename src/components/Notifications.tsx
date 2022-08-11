@@ -1,9 +1,13 @@
+import { Tooltip } from "@material-tailwind/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { MdOutlineCancel } from "react-icons/md";
 import { useThemeProvider } from "../contexts/theme-context";
 import { useGetConfigDataWithoutFetching } from "../hooks/useGetConfigDataWithoutFetching";
+import { tooltipMain } from "../utils/materialTailwind";
 import { WhichMenuItemClicked } from "../utils/types/app.types";
+import { motion } from "framer-motion";
+import { containerVariants } from "../utils/framerMotionAnimationsVariants";
 
 interface Props {
   handleClickOff: (clicked: WhichMenuItemClicked) => void;
@@ -56,21 +60,33 @@ const Notifications = ({ handleClickOff }: Props) => {
   }
   ////jsx
   return (
-    <div className="nav-item absolute right-5 md:right-40 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96 shadow-2xl">
+    <motion.div
+      className="nav-item absolute right-5 md:right-40 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96 shadow-2xl"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div className="flex justify-between items-center">
         <p className="dark:text-white">{t("common:notifications")}</p>
-        <button
-          type="button"
-          onClick={() => {
-            handleClickOff("notification");
-          }}
-          className="text-xl rounded-full p-3 hover:bg-light-gray  block hover:shadow-lg dark:text-white dark:hover:text-black"
+        <Tooltip
+          content={t("common:close")}
+          placement="bottom"
+          {...tooltipMain}
         >
-          <MdOutlineCancel />
-        </button>
+          <button
+            type="button"
+            onClick={() => {
+              handleClickOff("notification");
+            }}
+            className="text-xl rounded-full p-3 hover:bg-light-gray  block hover:shadow-lg dark:text-white dark:hover:text-black"
+          >
+            <MdOutlineCancel />
+          </button>
+        </Tooltip>
       </div>
       {notificationsContent}
-    </div>
+    </motion.div>
   );
 };
 

@@ -37,6 +37,60 @@ export const errorModalVariants = {
   },
 };
 
+export const fromLeftMoveVariants = {
+  hidden: {
+    x: -400,
+    opacity: 0,
+  },
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: { duration: 0.3 },
+  },
+  exit: {
+    x: -400,
+    opacity: 0,
+    transition: { ease: "easeInOut", duration: 0.3 },
+  },
+};
+
+export const fromLeftMoveDelayedVariants = {
+  hidden: {
+    scale: 0.3,
+    x: -100,
+    opacity: 0,
+  },
+  visible: {
+    scale: 1,
+    x: 0,
+    opacity: 1,
+    transition: { duration: 0.3, delay: 0.2 },
+  },
+  exit: {
+    scale: 0.3,
+    x: -100,
+    opacity: 0,
+    transition: { ease: "easeInOut", duration: 0.3 },
+  },
+};
+
+export const containerFromRightVariants = {
+  hidden: {
+    x: 400,
+    opacity: 0,
+  },
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: { duration: 0.3 },
+  },
+  exit: {
+    x: 400,
+    opacity: 0,
+    transition: { ease: "easeInOut", duration: 0.3 },
+  },
+};
+
 // export const linksHoverVariants = {
 //   hidden: {
 //     opacity: 0,

@@ -130,3 +130,9 @@ export type Planter = {
   planterId: string;
   name: string;
 };
+
+//companies
+export type Company = {
+  id: string;
+  name: string;
+};
