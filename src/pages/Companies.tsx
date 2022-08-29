@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useThemeProvider } from "../contexts/theme-context";
 import { motion } from "framer-motion";
@@ -8,12 +8,14 @@ import { v4 as uuidv4 } from "uuid";
 import { useGetCompanies } from "../hooks/useCompaniesCRUDData";
 
 import Header from "../components/Header";
+import CompaniesTable from "../components/tables-components/CompaniesTable";
 
 const Companies = () => {
   ////vars
   const { t } = useTranslation();
   const { currentColor } = useThemeProvider();
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([{ id: "", name: "" }]);
+  // console.log({ companies });
 
   ////CRUD
   const { data, isFetching, isError, error } = useGetCompanies();
@@ -21,7 +23,10 @@ const Companies = () => {
   //   const { mutate: putMutate } = usePutField();
   //   const { mutate: deleteMutate } = useDeleteField();
   useEffect(() => {
-    if (data) setCompanies({ ...data.data });
+    if (data) {
+      console.log(data.data);
+      setCompanies({ ...data.data });
+    }
   }, [data]);
 
   ////jsx
@@ -58,7 +63,7 @@ const Companies = () => {
             category={t("common:dictionaries")}
             title={t("common:companies")}
           />
-          <p>table</p>
+          <CompaniesTable tableData={companies} />
         </motion.div>
       </Fragment>
     );

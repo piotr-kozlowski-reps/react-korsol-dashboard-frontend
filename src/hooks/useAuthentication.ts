@@ -7,6 +7,13 @@ interface AuthenticationReturnInterface {
   authenticate: (tokenPassed: string) => void;
 }
 
+/**
+ *
+ * to stare authenticate
+ * nie używane już
+ * potem wywalić
+ */
+
 export const useAuthentication = (): AuthenticationReturnInterface => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState("");
@@ -22,11 +29,13 @@ export const useAuthentication = (): AuthenticationReturnInterface => {
   }
 
   const authenticate = (tokenPassed: string) => {
+    debugger;
     const decoded: TokenInternalData | undefined = jwt_decode(tokenPassed);
     if (!decoded)
       throw new Error(`Couldn't decode token, it seems to have bad format.`);
 
-    //context - start
+    console.log({ decoded });
+
     let expirationDateExtractedFromToken: Date = new Date();
     let userIdExtractedFromToken: string | undefined = undefined;
     if (
@@ -40,14 +49,6 @@ export const useAuthentication = (): AuthenticationReturnInterface => {
       throw new Error(`Couldn't decode token, it seems to have bad format.`);
     }
 
-    if (userIdExtractedFromToken) {
-      setUserId(userIdExtractedFromToken);
-    }
-    setToken(tokenPassed);
-    setTokenExpirationDate(expirationDateExtractedFromToken);
-    setIsLoggedIn(true);
-    //context - end
-
     //localStorage - start
     localStorage.setItem(
       "userData",
@@ -59,6 +60,15 @@ export const useAuthentication = (): AuthenticationReturnInterface => {
       })
     );
     //localStorage - end
+
+    //context - start
+    if (userIdExtractedFromToken) {
+      setUserId(userIdExtractedFromToken);
+    }
+    setToken(tokenPassed);
+    setTokenExpirationDate(expirationDateExtractedFromToken);
+    setIsLoggedIn(true);
+    //context - end
   };
   return {
     isLoggedIn,

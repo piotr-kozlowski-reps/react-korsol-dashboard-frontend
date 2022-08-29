@@ -96,13 +96,14 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
                   <p className="text-gray-400 m-3 mt-4 uppercase">
                     {item.title}
                   </p>
-                  {item.links.map((link) => (
+                  {item.links.map((link, index) => (
                     <motion.div
                       className="ml-6"
                       variants={fromLeftMoveDelayedVariants}
                       initial="hidden"
                       animate="visible"
                       exit="exit"
+                      key={index}
                     >
                       <NavLink
                         to={`/${link.route}`}

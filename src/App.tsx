@@ -67,6 +67,8 @@ function App() {
     if (!decoded)
       throw new Error(`Couldn't decode token, it seems to have bad format.`);
 
+    console.log({ decoded });
+
     let expirationDateExtractedFromToken: Date = new Date();
     let userIdExtractedFromToken: string | undefined = undefined;
     if (
@@ -79,6 +81,13 @@ function App() {
     } else {
       throw new Error(`Couldn't decode token, it seems to have bad format.`);
     }
+
+    // console.log(
+    //   "expirationDateExtractedFromToken.toISOString()",
+    //   expirationDateExtractedFromToken.toISOString()
+    // );
+    // console.log({ tokenPassed });
+    // console.log({ userIdExtractedFromToken });
 
     //localStorage - start
     localStorage.setItem(
@@ -136,7 +145,6 @@ function App() {
     localStorage.setItem("themeMode", e.target.value);
     setThemeSettings(false);
   };
-
   ////temporary theme not in custom hook - end
 
   ////logic
@@ -166,16 +174,19 @@ function App() {
   const logoutPostponed = useCallback(() => {
     logoutAndClearLocalStorageAndAllStateElements();
   }, []);
-  useEffect(() => {
-    if (token && tokenExpirationDate) {
-      const remainingTime =
-        new Date(tokenExpirationDate).getTime() - new Date().getTime();
+  // useEffect(() => {
+  //   if (token && tokenExpirationDate) {
+  //     const remainingTime =
+  //       new Date(tokenExpirationDate).getTime() - new Date().getTime();
 
-      logoutTimer = setTimeout(logoutPostponed, remainingTime);
-    } else {
-      clearTimeout(logoutTimer);
-    }
-  }, [token, tokenExpirationDate, logoutPostponed]);
+  //     console.log({ remainingTime });
+
+  //     logoutTimer = setTimeout(logoutPostponed, remainingTime);
+  //   } else {
+  //     clearTimeout(logoutTimer);
+  //   }
+  // }, [token, tokenExpirationDate, logoutPostponed]);
+  //TODO: go back here and check the logout logic
 
   //screenSize
   useEffect(() => {
