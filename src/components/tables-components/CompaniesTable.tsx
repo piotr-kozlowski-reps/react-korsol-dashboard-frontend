@@ -1,14 +1,21 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useTable, useSortBy } from "react-table";
+import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import { Company } from "../../utils/types/app.types";
 
 interface Props {
-  tableData: any;
+  tableData: any[];
 }
 
-////
-//dummy
-const dummyTableData = [
+////dummy
+const dummyCompaniesTableData: Company[] = [
   {
     id: "f1efe069-d5a3-497b-89f9-3b63cfd414fe",
     name: "Eimbee",
@@ -35,73 +42,77 @@ const dummyTableData = [
   },
 ];
 
+////table
+const columnHelper = createColumnHelper<Company>();
+const columns: ColumnDef<Company>[] = [
+  columnHelper.accessor("name", {
+    header: () => <span>Firmy</span>,
+    cell: (info) => info.getValue(),
+  }),
+];
+
 const CompaniesTable = ({ tableData }: Props) => {
   ////vars
   const { t } = useTranslation();
 
-  ////memoization
-  const [columns, data] = useMemo(() => {
-    const columns: any = [
-      {
-        Header: t("common:companies"),
-        accessor: "name",
-      },
-    ];
-    return [columns, dummyTableData];
-  }, [dummyTableData]);
-
   ////table
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy); //TODO: typ tutaj dograć
+
+  const table = useReactTable({
+    dummyCompaniesTableData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   ////jsx
   return (
-    <table
-      {...getTableProps()}
-      className="m-2 rounded-3xl w-full dark:bg-main-dark-bg "
-    >
-      <thead>
-        {headerGroups.map((headerGroup, index) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                className="gap-3 py-3 dark:bg-white bg-gray-400 text-white rounded-xl"
-              >
-                {column.render("Header")}
-                <span>
-                  {column.isSorted
-                    ? column.isSortedDesc
-                      ? " desc..."
-                      : " asc..."
-                    : ""}
-                </span>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()} className="text-center">
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr
-              {...row.getRowProps()}
-              className="cursor-pointer duration-200 hover:bg-blue-gray-50 "
-            >
-              {row.cells.map((cell) => (
-                <td
-                  {...cell.getCellProps()}
-                  className="py-3 rounded-xl duration-150 hover:scale-110"
-                >
-                  {cell.render("Cell")}
-                </td>
-              ))}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <p>companies table </p>
+
+    // <table
+    //   {...getTableProps()}
+    //   className="m-2 rounded-3xl w-full dark:bg-main-dark-bg "
+    // >
+    //   <thead>
+    //     {headerGroups.map((headerGroup, index) => (
+    //       <tr {...headerGroup.getHeaderGroupProps()}>
+    //         {headerGroup.headers.map((column) => (
+    //           <th
+    //             {...column.getHeaderProps(column.getSortByToggleProps())}
+    //             className="gap-3 py-3 dark:bg-white bg-gray-400 text-white rounded-xl"
+    //           >
+    //             {column.render("Header")}
+    //             <span>
+    //               {column.isSorted
+    //                 ? column.isSortedDesc
+    //                   ? " desc..."
+    //                   : " asc..."
+    //                 : ""}
+    //             </span>
+    //           </th>
+    //         ))}
+    //       </tr>
+    //     ))}
+    //   </thead>
+    //   <tbody {...getTableBodyProps()} className="text-center">
+    //     {rows.map((row) => {
+    //       prepareRow(row);
+    //       return (
+    //         <tr
+    //           {...row.getRowProps()}
+    //           className="cursor-pointer duration-200 hover:bg-blue-gray-50 "
+    //         >
+    //           {row.cells.map((cell) => (
+    //             <td
+    //               {...cell.getCellProps()}
+    //               className="py-3 rounded-xl duration-150 hover:scale-110"
+    //             >
+    //               {cell.render("Cell")}
+    //             </td>
+    //           ))}
+    //         </tr>
+    //       );
+    //     })}
+    //   </tbody>
+    // </table>
   );
 };
 
