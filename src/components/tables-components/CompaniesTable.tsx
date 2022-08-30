@@ -1,118 +1,143 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ColumnDef,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { useTable } from "react-table";
 
-import { Company } from "../../utils/types/app.types";
+import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
+import { IoMdAdd } from "react-icons/io";
+import { Tooltip } from "@material-tailwind/react";
+import { tooltipMain } from "../../utils/materialTailwind";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 
 interface Props {
   tableData: any[];
+  deleteItem: UseMutateFunction<
+    AxiosResponse<any, any>,
+    unknown,
+    string,
+    unknown
+  >;
 }
 
-////dummy
-const dummyCompaniesTableData: Company[] = [
-  {
-    id: "f1efe069-d5a3-497b-89f9-3b63cfd414fe",
-    name: "Eimbee",
-  },
-  {
-    id: "612a1237-d8fe-4784-af8e-99311a65a7ed",
-    name: "Tavu",
-  },
-  {
-    id: "3836f0af-98ca-42a6-aabb-96cffd64bd71",
-    name: "Trudeo",
-  },
-  {
-    id: "db2fef34-9e86-4e7c-b331-acc20326ca80",
-    name: "Fivechat",
-  },
-  {
-    id: "2c83f2e5-faa3-4313-92e4-8ad2fcba4c5e",
-    name: "Twitternation",
-  },
-  {
-    id: "1a60fe1a-aeef-49f4-8cc1-1f466abdcc07",
-    name: "Skinte",
-  },
-];
-
-////table
-const columnHelper = createColumnHelper<Company>();
-const columns: ColumnDef<Company>[] = [
-  columnHelper.accessor("name", {
-    header: () => <span>Firmy</span>,
-    cell: (info) => info.getValue(),
-  }),
-];
-
-const CompaniesTable = ({ tableData }: Props) => {
+const CompaniesTable = ({ tableData, deleteItem }: Props) => {
   ////vars
   const { t } = useTranslation();
 
-  ////table
+  ////memoization
+  const [columns, data] = useMemo(() => {
+    const columns: any = [
+      {
+        Header: t("common:companies"),
+        accessor: "name",
+      },
+    ];
+    return [columns, tableData];
+  }, [tableData, t]);
 
-  const table = useReactTable({
-    dummyCompaniesTableData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  ////table
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data }); //TODO: typ tutaj dograć
+
+  ////logic
+  function showAlert(message: string) {
+    alert(message);
+  }
 
   ////jsx
   return (
-    <p>companies table </p>
-
-    // <table
-    //   {...getTableProps()}
-    //   className="m-2 rounded-3xl w-full dark:bg-main-dark-bg "
-    // >
-    //   <thead>
-    //     {headerGroups.map((headerGroup, index) => (
-    //       <tr {...headerGroup.getHeaderGroupProps()}>
-    //         {headerGroup.headers.map((column) => (
-    //           <th
-    //             {...column.getHeaderProps(column.getSortByToggleProps())}
-    //             className="gap-3 py-3 dark:bg-white bg-gray-400 text-white rounded-xl"
-    //           >
-    //             {column.render("Header")}
-    //             <span>
-    //               {column.isSorted
-    //                 ? column.isSortedDesc
-    //                   ? " desc..."
-    //                   : " asc..."
-    //                 : ""}
-    //             </span>
-    //           </th>
-    //         ))}
-    //       </tr>
-    //     ))}
-    //   </thead>
-    //   <tbody {...getTableBodyProps()} className="text-center">
-    //     {rows.map((row) => {
-    //       prepareRow(row);
-    //       return (
-    //         <tr
-    //           {...row.getRowProps()}
-    //           className="cursor-pointer duration-200 hover:bg-blue-gray-50 "
-    //         >
-    //           {row.cells.map((cell) => (
-    //             <td
-    //               {...cell.getCellProps()}
-    //               className="py-3 rounded-xl duration-150 hover:scale-110"
-    //             >
-    //               {cell.render("Cell")}
-    //             </td>
-    //           ))}
-    //         </tr>
-    //       );
-    //     })}
-    //   </tbody>
-    // </table>
+    <table
+      {...getTableProps()}
+      className="m-2 rounded-3xl w-full dark:bg-main-dark-bg "
+    >
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th
+                {...column.getHeaderProps()}
+                className="py-3 dark:bg-white bg-gray-400 text-white rounded-xl"
+              >
+                <div className="flex justify-center items-center">
+                  <div className="flex-grow">{column.render("Header")}</div>
+                  <div className="text-white dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer p-2 mr-4">
+                    <Tooltip
+                      content={t("common:add")}
+                      placement="bottom"
+                      {...tooltipMain}
+                    >
+                      <span
+                        className=""
+                        onClick={() => showAlert(`not implemented - add`)}
+                      >
+                        <IoMdAdd />
+                      </span>
+                    </Tooltip>
+                  </div>
+                </div>
+                {/* <span>
+                  {column.isSorted
+                    ? column.isSortedDesc
+                      ? " desc..."
+                      : " asc..."
+                    : ""}
+                </span> */}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()} className="text-center">
+        {rows.map((row) => {
+          prepareRow(row);
+          return (
+            <tr
+              {...row.getRowProps()}
+              className="cursor-pointer duration-200 hover:bg-gray-50 duration-150 hover:scale-101"
+            >
+              {row.cells.map((cell) => {
+                return (
+                  <td {...cell.getCellProps()} className="py-3 rounded-xl">
+                    <div className="flex justify-center items-center">
+                      <div className="flex-grow">{cell.render("Cell")}</div>
+                      <div className="flex justify-center items-center">
+                        <Tooltip
+                          content={t("common:edit")}
+                          placement="bottom"
+                          {...tooltipMain}
+                        >
+                          <span
+                            className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg"
+                            onClick={() =>
+                              showAlert(
+                                `not implemented - edit - id: ${cell.row.original.id}`
+                              )
+                            }
+                          >
+                            <AiOutlineEdit />
+                          </span>
+                        </Tooltip>
+                        <Tooltip
+                          content={t("common:delete")}
+                          placement="bottom"
+                          {...tooltipMain}
+                        >
+                          <span
+                            className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg"
+                            onClick={() => deleteItem(cell.row.original.id)}
+                          >
+                            <AiOutlineDelete />
+                          </span>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
 

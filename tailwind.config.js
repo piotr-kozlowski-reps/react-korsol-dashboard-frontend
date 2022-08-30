@@ -49,6 +49,9 @@ module.exports = withMT({
       zIndex: {
         max: "10000001",
       },
+      scale: {
+        101: "1.015",
+      },
     },
   },
   plugins: [],

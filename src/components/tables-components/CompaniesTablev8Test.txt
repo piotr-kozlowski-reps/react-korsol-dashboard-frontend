@@ -1,0 +1,121 @@
+import React from "react";
+
+const CompaniesTablev8Test = () => {
+  return <div>CompaniesTablev8Test</div>;
+};
+
+export default CompaniesTablev8Test;
+
+// import React, { useMemo, useState } from "react";
+// import { useTranslation } from "react-i18next";
+// import {
+//   ColumnDef,
+//   flexRender,
+//   getCoreRowModel,
+//   getSortedRowModel,
+//   SortingState,
+//   useReactTable,
+// } from "@tanstack/react-table";
+
+// import { Company } from "../../utils/types/app.types";
+
+// interface Props {
+//   tableData: Company[];
+// }
+
+// ////table
+// // const columnHelper = createColumnHelper<Company>();
+// // const columns = [
+// //   columnHelper.accessor((row) => row.name, {
+// //     id: "name",
+// //     header: () => <span>Firmy</span>,
+// //     cell: (name) => name.getValue(),
+// //   }),
+// // ];
+// // const defaultColumns = [
+// //   columnHelper.accessor("name", {
+// //     header: () => "firma",
+// //     cell: (name) => <span>{name.getValue()}</span>,
+// //   }),
+// // ];
+
+// const CompaniesTable = ({ tableData }: Props) => {
+//   ////vars
+//   const { t } = useTranslation();
+
+//   //table
+//   // const table = useReactTable({ tableData, columns });
+
+//   ////table
+//   const columns = useMemo<ColumnDef<Company>[]>(
+//     () => [
+//       {
+//         accessorKey: "name",
+//         header: () => <span>{t("common:companies")}</span>,
+//         cell: (name) => name.getValue(),
+//       },
+//     ],
+//     [t]
+//   );
+//   const table = useReactTable({
+//     tableData,
+//     columns,
+//     state: {
+//       sorting,
+//     },
+//   });
+
+//   ////jsx
+//   return (
+//     <p>companies table </p>
+
+//     // <table
+//     //   {...getTableProps()}
+//     //   className="m-2 rounded-3xl w-full dark:bg-main-dark-bg "
+//     // >
+//     //   <thead>
+//     //     {headerGroups.map((headerGroup, index) => (
+//     //       <tr {...headerGroup.getHeaderGroupProps()}>
+//     //         {headerGroup.headers.map((column) => (
+//     //           <th
+//     //             {...column.getHeaderProps(column.getSortByToggleProps())}
+//     //             className="gap-3 py-3 dark:bg-white bg-gray-400 text-white rounded-xl"
+//     //           >
+//     //             {column.render("Header")}
+//     //             <span>
+//     //               {column.isSorted
+//     //                 ? column.isSortedDesc
+//     //                   ? " desc..."
+//     //                   : " asc..."
+//     //                 : ""}
+//     //             </span>
+//     //           </th>
+//     //         ))}
+//     //       </tr>
+//     //     ))}
+//     //   </thead>
+//     //   <tbody {...getTableBodyProps()} className="text-center">
+//     //     {rows.map((row) => {
+//     //       prepareRow(row);
+//     //       return (
+//     //         <tr
+//     //           {...row.getRowProps()}
+//     //           className="cursor-pointer duration-200 hover:bg-blue-gray-50 "
+//     //         >
+//     //           {row.cells.map((cell) => (
+//     //             <td
+//     //               {...cell.getCellProps()}
+//     //               className="py-3 rounded-xl duration-150 hover:scale-110"
+//     //             >
+//     //               {cell.render("Cell")}
+//     //             </td>
+//     //           ))}
+//     //         </tr>
+//     //       );
+//     //     })}
+//     //   </tbody>
+//     // </table>
+//   );
+// };
+
+// export default CompaniesTable;

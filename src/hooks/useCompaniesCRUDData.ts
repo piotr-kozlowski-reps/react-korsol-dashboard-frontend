@@ -16,7 +16,27 @@ const getCompanies = () =>
   });
 
 export const useGetCompanies = () => {
-  return useQuery(["companies"], () => getCompanies());
+  return useQuery(["companies"], () => getCompanies(), {
+    refetchOnWindowFocus: false,
+  });
+};
+
+////DELETE
+const deleteCompanies = (id: string) =>
+  axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/companies/${id}`, {
+    headers: {
+      Authorization: token,
+      Accept: "application/json",
+    },
+  });
+
+export const useDeleteCompany = () => {
+  const queryClient = useQueryClient();
+  return useMutation(deleteCompanies, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["companies"]);
+    },
+  });
 };
 
 // ////POST
@@ -49,24 +69,6 @@ export const useGetCompanies = () => {
 // export const usePutField = () => {
 //   const queryClient = useQueryClient();
 //   return useMutation(putField, {
-//     onSuccess: () => {
-//       queryClient.invalidateQueries(["fields"]);
-//     },
-//   });
-// };
-
-// ////DELETE
-// const deleteField = (fieldId: string) =>
-//   axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/fields/${fieldId}`, {
-//     headers: {
-//       Authorization: token,
-//       Accept: "application/json",
-//     },
-//   });
-
-// export const useDeleteField = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation(deleteField, {
 //     onSuccess: () => {
 //       queryClient.invalidateQueries(["fields"]);
 //     },
