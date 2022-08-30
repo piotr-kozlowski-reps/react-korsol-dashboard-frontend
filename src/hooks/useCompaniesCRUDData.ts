@@ -39,23 +39,30 @@ export const useDeleteCompany = () => {
   });
 };
 
-// ////POST
-// const postField = (fieldData: Field) =>
-//   axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fields/`, fieldData, {
-//     headers: {
-//       Authorization: token,
-//       Accept: "application/json",
-//     },
-//   });
+////POST
+const postCompany = (companyData: Company) =>
+  axios.post(
+    `${process.env.REACT_APP_BACKEND_URL}/api/companies/`,
+    companyData,
+    {
+      headers: {
+        Authorization: token,
+        Accept: "application/json",
+      },
+    }
+  );
 
-// export const usePostField = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation(postField, {
-//     onSuccess: () => {
-//       queryClient.invalidateQueries(["fields"]);
-//     },
-//   });
-// };
+export const usePostCompany = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    postCompany
+    // {
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries(["companies"]);
+    // },
+    // }
+  );
+};
 
 // ////PUT
 // const putField = (fieldData: Field) =>

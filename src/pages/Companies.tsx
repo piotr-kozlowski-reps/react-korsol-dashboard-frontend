@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   useGetCompanies,
   useDeleteCompany,
+  usePostCompany,
 } from "../hooks/useCompaniesCRUDData";
 
 import Header from "../components/Header";
@@ -21,7 +22,7 @@ const Companies = () => {
 
   ////CRUD
   const { data, isLoading, isFetching, isError, error } = useGetCompanies();
-  //   const { mutate: postMutate } = usePostField();
+  const { mutate: postMutate } = usePostCompany();
   //   const { mutate: putMutate } = usePutField();
   const { mutate: deleteMutate } = useDeleteCompany();
   useEffect(() => {
@@ -65,7 +66,11 @@ const Companies = () => {
             category={t("common:dictionaries")}
             title={t("common:companies")}
           />
-          <CompaniesTable tableData={companies} deleteItem={deleteMutate} />
+          <CompaniesTable
+            tableData={companies}
+            deleteItem={deleteMutate}
+            postItem={postMutate}
+          />
         </motion.div>
       </Fragment>
     );

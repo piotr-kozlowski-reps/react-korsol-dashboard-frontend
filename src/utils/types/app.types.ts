@@ -6,6 +6,10 @@ export interface LoginFormValues {
   password: string;
 }
 
+export interface CompanyFormValues {
+  name: string;
+}
+
 //authentication
 export interface AuthResponse {
   authToken: string;
