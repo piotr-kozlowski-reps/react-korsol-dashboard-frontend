@@ -6,7 +6,7 @@ import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { IoMdAdd } from "react-icons/io";
 import { Tooltip } from "@material-tailwind/react";
 import { tooltipMain } from "../../utils/materialTailwind";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { UseMutateFunction, UseMutationResult } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import CompaniesForm from "../formik-forms/CompaniesForm";
 import { AnimatePresence } from "framer-motion";
@@ -26,12 +26,25 @@ interface Props {
     Company,
     unknown
   >;
+  putItem: UseMutateFunction<
+    AxiosResponse<any, any>,
+    unknown,
+    Company,
+    unknown
+  >;
 }
 
-const CompaniesTable = ({ tableData, deleteItem, postItem }: Props) => {
+const CompaniesTable = ({
+  tableData,
+  deleteItem,
+  postItem,
+  putItem,
+}: Props) => {
   ////vars
   const { t } = useTranslation();
   const [isShowPostModal, setIsShowPostModal] = useState(false);
+  const [isShowPutModal, setIsShowPutModal] = useState(false);
+  const [putData, setPutData] = useState<Company>({ id: "", name: "" });
 
   ////memoization
   const [columns, data] = useMemo(() => {
@@ -58,7 +71,21 @@ const CompaniesTable = ({ tableData, deleteItem, postItem }: Props) => {
     <Fragment>
       <AnimatePresence>
         {isShowPostModal && (
-          <CompaniesForm onCancel={setIsShowPostModal} postItem={postItem} />
+          <CompaniesForm
+            onCancel={setIsShowPostModal}
+            postItem={postItem}
+            isPutOrPost="POST"
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isShowPutModal && (
+          <CompaniesForm
+            onCancel={setIsShowPutModal}
+            isPutOrPost="PUT"
+            putItem={putItem}
+            companyData={putData}
+          />
         )}
       </AnimatePresence>
       <table
@@ -123,11 +150,15 @@ const CompaniesTable = ({ tableData, deleteItem, postItem }: Props) => {
                           >
                             <span
                               className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
-                              onClick={() =>
-                                showAlert(
-                                  `not implemented - edit - id: ${cell.row.original.id}`
-                                )
-                              }
+                              onClick={() => {
+                                setPutData(cell.row.original);
+                                setIsShowPutModal(true);
+                              }}
+                              // onClick={() =>
+                              //   showAlert(
+                              //     `not implemented - edit - id: ${cell.row.original.id}`
+                              //   )
+                              // }
                             >
                               <AiOutlineEdit />
                             </span>

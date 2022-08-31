@@ -22,7 +22,7 @@ export const useGetCompanies = () => {
 };
 
 ////DELETE
-const deleteCompanies = (id: string) =>
+const deleteCompany = (id: string) =>
   axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/companies/${id}`, {
     headers: {
       Authorization: token,
@@ -32,7 +32,7 @@ const deleteCompanies = (id: string) =>
 
 export const useDeleteCompany = () => {
   const queryClient = useQueryClient();
-  return useMutation(deleteCompanies, {
+  return useMutation(deleteCompany, {
     onSuccess: () => {
       queryClient.invalidateQueries(["companies"]);
     },
@@ -54,30 +54,23 @@ const postCompany = (companyData: Company) =>
 
 export const usePostCompany = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    postCompany
-    // {
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries(["companies"]);
-    // },
-    // }
-  );
+  return useMutation(postCompany);
 };
 
-// ////PUT
-// const putField = (fieldData: Field) =>
-//   axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/fields/`, fieldData, {
-//     headers: {
-//       Authorization: token,
-//       Accept: "application/json",
-//     },
-//   });
+////PUT
+const putCompany = (companyData: Company) =>
+  axios.put(
+    `${process.env.REACT_APP_BACKEND_URL}/api/companies/`,
+    companyData,
+    {
+      headers: {
+        Authorization: token,
+        Accept: "application/json",
+      },
+    }
+  );
 
-// export const usePutField = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation(putField, {
-//     onSuccess: () => {
-//       queryClient.invalidateQueries(["fields"]);
-//     },
-//   });
-// };
+export const usePutCompany = () => {
+  const queryClient = useQueryClient();
+  return useMutation(putCompany);
+};

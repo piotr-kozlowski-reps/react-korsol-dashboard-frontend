@@ -9,6 +9,7 @@ import {
   useGetCompanies,
   useDeleteCompany,
   usePostCompany,
+  usePutCompany,
 } from "../hooks/useCompaniesCRUDData";
 
 import Header from "../components/Header";
@@ -23,11 +24,10 @@ const Companies = () => {
   ////CRUD
   const { data, isLoading, isFetching, isError, error } = useGetCompanies();
   const { mutate: postMutate } = usePostCompany();
-  //   const { mutate: putMutate } = usePutField();
+  const { mutate: putMutate } = usePutCompany();
   const { mutate: deleteMutate } = useDeleteCompany();
   useEffect(() => {
     if (data) {
-      console.log(data.data);
       setCompanies([...data.data]);
     }
   }, [data]);
@@ -70,6 +70,7 @@ const Companies = () => {
             tableData={companies}
             deleteItem={deleteMutate}
             postItem={postMutate}
+            putItem={putMutate}
           />
         </motion.div>
       </Fragment>
