@@ -1,8 +1,9 @@
 import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useTable } from "react-table";
+import { useTable, useSortBy } from "react-table";
 
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
+import { TbArrowBarDown, TbArrowBarToUp } from "react-icons/tb";
 import { IoMdAdd } from "react-icons/io";
 import { Tooltip } from "@material-tailwind/react";
 import { tooltipMain } from "../../utils/materialTailwind";
@@ -11,6 +12,8 @@ import { AxiosResponse } from "axios";
 import CompaniesForm from "../formik-forms/CompaniesForm";
 import { AnimatePresence } from "framer-motion";
 import { Company } from "../../utils/types/app.types";
+import { GiDivert } from "react-icons/gi";
+import { FiDivideCircle } from "react-icons/fi";
 
 interface Props {
   tableData: any[];
@@ -58,8 +61,13 @@ const CompaniesTable = ({
   }, [tableData, t]);
 
   ////table
+  // function compareStrings(rowA: string[], rowB: string[], id: Number, desc: boolean): Number {
+  //   let a = rowA.values[id!]
+  // }
+  //TODO: sortowanie
+  //https://stackoverflow.com/questions/63927644/how-does-one-supply-a-custom-sort-function-for-react-table-7
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }); //TODO: typ tutaj dograć
+    useTable<Company>({ columns, data }, useSortBy);
 
   ////logic
   function showAlert(message: string) {
@@ -97,11 +105,26 @@ const CompaniesTable = ({
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th
-                  {...column.getHeaderProps()}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
                   className="py-3 dark:bg-gray-700 bg-gray-400 text-white rounded-xl"
                 >
                   <div className="flex justify-center items-center">
-                    <div className="flex-grow">{column.render("Header")}</div>
+                    <div className="flex-grow">
+                      <div className="flex justify-center items-center">
+                        <div>{column.render("Header")}</div>
+                        <div className="ml-2">
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <TbArrowBarToUp />
+                            ) : (
+                              <TbArrowBarDown />
+                            )
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                    </div>
                     <div
                       onClick={() => setIsShowPostModal(true)}
                       className="text-white dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer p-2 mr-4"
@@ -117,13 +140,6 @@ const CompaniesTable = ({
                       </Tooltip>
                     </div>
                   </div>
-                  {/* <span>
-                  {column.isSorted
-                    ? column.isSortedDesc
-                      ? " desc..."
-                      : " asc..."
-                    : ""}
-                </span> */}
                 </th>
               ))}
             </tr>
@@ -154,11 +170,6 @@ const CompaniesTable = ({
                                 setPutData(cell.row.original);
                                 setIsShowPutModal(true);
                               }}
-                              // onClick={() =>
-                              //   showAlert(
-                              //     `not implemented - edit - id: ${cell.row.original.id}`
-                              //   )
-                              // }
                             >
                               <AiOutlineEdit />
                             </span>
@@ -170,7 +181,9 @@ const CompaniesTable = ({
                           >
                             <span
                               className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
-                              onClick={() => deleteItem(cell.row.original.id)}
+                              onClick={() => {
+                                deleteItem(cell.row.original.id);
+                              }}
                             >
                               <AiOutlineDelete />
                             </span>
