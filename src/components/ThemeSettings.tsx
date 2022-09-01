@@ -95,7 +95,12 @@ const ThemeSettings = ({
           <p className="font-semibold text-lg">{t("common:theme-colors")}</p>
           <div className="flex gap-3">
             {themeColors.map((item, index) => (
-              <Tooltip content={item.name} placement="top" {...tooltipMain}>
+              <Tooltip
+                content={item.name}
+                placement="top"
+                {...tooltipMain}
+                key={index}
+              >
                 <div className="relative mt-2 cursor-pointer flex gap-5 items-center">
                   <button
                     type="button"

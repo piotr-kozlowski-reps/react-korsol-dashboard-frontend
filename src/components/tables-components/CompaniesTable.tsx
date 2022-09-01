@@ -1,19 +1,18 @@
 import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useTable, useSortBy } from "react-table";
-
+import { useTable, useSortBy, useGlobalFilter } from "react-table";
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { TbArrowBarDown, TbArrowBarToUp } from "react-icons/tb";
 import { IoMdAdd } from "react-icons/io";
 import { Tooltip } from "@material-tailwind/react";
 import { tooltipMain } from "../../utils/materialTailwind";
-import { UseMutateFunction, UseMutationResult } from "@tanstack/react-query";
+import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import CompaniesForm from "../formik-forms/CompaniesForm";
 import { AnimatePresence } from "framer-motion";
 import { Company } from "../../utils/types/app.types";
-import { GiDivert } from "react-icons/gi";
-import { FiDivideCircle } from "react-icons/fi";
+
+import CompaniesForm from "../formik-forms/CompaniesForm";
+import GlobalFilter from "./GlobalFilter";
 
 interface Props {
   tableData: any[];
@@ -66,8 +65,17 @@ const CompaniesTable = ({
   // }
   //TODO: sortowanie
   //https://stackoverflow.com/questions/63927644/how-does-one-supply-a-custom-sort-function-for-react-table-7
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable<Company>({ columns, data }, useSortBy);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    setGlobalFilter,
+  } = useTable<Company>({ columns, data }, useGlobalFilter, useSortBy);
+
+  const { globalFilter } = state;
 
   ////logic
   function showAlert(message: string) {
@@ -96,6 +104,7 @@ const CompaniesTable = ({
           />
         )}
       </AnimatePresence>
+      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <table
         {...getTableProps()}
         className="m-2 rounded-3xl w-full dark:bg-main-dark-bg"
