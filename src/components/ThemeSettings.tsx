@@ -38,7 +38,7 @@ const ThemeSettings = ({
       animate="visible"
       exit="exit"
     >
-      <div className="float-right h-screen dark:text-gray-200 bg-white dark:[#474B52] w-400">
+      <div className="float-right h-screen dark:text-gray-200 bg-white dark:bg-main-dark-bg w-400">
         <div className="flex justify-between items-center p-4 ml-4">
           <p className="font-semibold text-xl">{t("common:settings")}</p>
           <Tooltip
@@ -57,7 +57,7 @@ const ThemeSettings = ({
           </Tooltip>
         </div>
 
-        <div className="flex-col border-t-1 border-color p-4 ml-4">
+        <div className="flex-col border-t-1 border-color p-4 ml-4 dark:border-gray-700">
           <p className="font-semibold text-lg">{t("common:theme-settings")}</p>
 
           <div className="mt-4">
@@ -91,7 +91,7 @@ const ThemeSettings = ({
           </div>
         </div>
 
-        <div className="flex-col border-t-1 border-color p-4 ml-4">
+        <div className="flex-col border-t-1 border-color p-4 ml-4 dark:border-gray-700">
           <p className="font-semibold text-lg">{t("common:theme-colors")}</p>
           <div className="flex gap-3">
             {themeColors.map((item, index) => (

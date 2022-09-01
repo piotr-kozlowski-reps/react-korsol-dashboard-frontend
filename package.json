@@ -47,7 +47,8 @@
     "dev": "i18nexus pull -k asP18t3Jst04ZrBvzmAHtA && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "refreshi18": "i18nexus pull -k asP18t3Jst04ZrBvzmAHtA"
   },
   "eslintConfig": {
     "extends": [

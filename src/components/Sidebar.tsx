@@ -47,7 +47,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
   const normalLink =
     "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-md text-gray-600 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2 cursor-pointer uppercase font-medium";
 
-  let content = <div>sidebar...</div>;
+  let content = <div>loading sidebar data...</div>;
   if (dataTyped && !isFetching) {
     content = (
       <motion.div

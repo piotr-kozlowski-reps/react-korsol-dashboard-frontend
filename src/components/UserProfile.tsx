@@ -58,7 +58,7 @@ const UserProfile = ({ userId, handleClickOff, logoutHandler }: Props) => {
         </Tooltip>
       </div>
 
-      <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
+      <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6 dark:border-gray-700">
         <img
           src={userProfileImage ? userProfileImage : dummyProfilePhoto}
           alt="User Profile"
@@ -77,7 +77,7 @@ const UserProfile = ({ userId, handleClickOff, logoutHandler }: Props) => {
       </div>
 
       <div
-        className="flex group items-center gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer dark:hover:bg-light-gray rounded-lg"
+        className="flex group items-center gap-5 border-b-1 border-color dark:border-gray-700 p-4 hover:bg-light-gray cursor-pointer dark:hover:bg-light-gray rounded-lg"
         onClick={() => alert("not implemented")}
       >
         <button

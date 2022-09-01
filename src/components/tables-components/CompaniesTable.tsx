@@ -90,7 +90,7 @@ const CompaniesTable = ({
       </AnimatePresence>
       <table
         {...getTableProps()}
-        className="m-2 rounded-3xl w-full dark:bg-main-dark-bg "
+        className="m-2 rounded-3xl w-full dark:bg-main-dark-bg"
       >
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -98,7 +98,7 @@ const CompaniesTable = ({
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps()}
-                  className="py-3 dark:bg-white bg-gray-400 text-white rounded-xl"
+                  className="py-3 dark:bg-gray-700 bg-gray-400 text-white rounded-xl"
                 >
                   <div className="flex justify-center items-center">
                     <div className="flex-grow">{column.render("Header")}</div>
@@ -135,7 +135,7 @@ const CompaniesTable = ({
             return (
               <tr
                 {...row.getRowProps()}
-                className=" hover:bg-gray-50 duration-150 hover:scale-101"
+                className="group dark:hover:text-black dark:hover:bg-light-gray hover:bg-gray-200 duration-150 hover:scale-101 text-gray-800 dark:text-gray-200"
               >
                 {row.cells.map((cell) => {
                   return (
@@ -149,7 +149,7 @@ const CompaniesTable = ({
                             {...tooltipMain}
                           >
                             <span
-                              className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
+                              className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
                               onClick={() => {
                                 setPutData(cell.row.original);
                                 setIsShowPutModal(true);
@@ -169,7 +169,7 @@ const CompaniesTable = ({
                             {...tooltipMain}
                           >
                             <span
-                              className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
+                              className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
                               onClick={() => deleteItem(cell.row.original.id)}
                             >
                               <AiOutlineDelete />

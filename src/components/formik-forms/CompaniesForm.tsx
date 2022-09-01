@@ -48,8 +48,6 @@ const CompaniesForm = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
 
-  console.log({ companyData });
-
   const existingId: string = companyData ? companyData.id : "";
 
   ////formik
@@ -166,7 +164,11 @@ const CompaniesForm = ({
         exit="exit"
       >
         <Modal
-          header={t("common:add-company")}
+          header={
+            isPutOrPost === "POST"
+              ? t("common:add-company")
+              : t("common:edit-company")
+          }
           onCancel={() => onCancel(false)}
           // headerClass={props.headerClass ? props.headerClass : ""}
           // show={!!props.error}
@@ -199,7 +201,11 @@ const CompaniesForm = ({
                         type="submit"
                         color="white"
                         bgColor={currentColor}
-                        text={t("common:add")}
+                        text={
+                          isPutOrPost === "POST"
+                            ? t("common:add")
+                            : t("common:confirm")
+                        }
                         borderRadius="10px"
                         size="md"
                         additionalClass="px-7 mx-2"

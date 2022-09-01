@@ -35,7 +35,7 @@ const Companies = () => {
   ////jsx
   let content = (
     <motion.div
-      className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl"
+      className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl dark:bg-secondary-dark-bg"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -56,7 +56,7 @@ const Companies = () => {
     content = (
       <Fragment>
         <motion.div
-          className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl"
+          className="m-2 mt-20 md:mt-0 md:m-10 p-2 md:p-10 bg-white rounded-3xl dark:bg-secondary-dark-bg"
           variants={containerVariants}
           initial="hidden"
           animate="visible"

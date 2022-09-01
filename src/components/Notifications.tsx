@@ -28,7 +28,7 @@ const Notifications = ({ handleClickOff }: Props) => {
         {notifications.map((item) => {
           return (
             <div
-              className={`flex items-center group leading-4 gap-5 border-b-1 border-color p-3 hover:bg-light-gray cursor-pointer w-full py-5 rounded-lg `}
+              className={`flex items-center group leading-4 gap-5 border-b-1 dark:border-gray-700 border-color p-3 hover:bg-light-gray cursor-pointer w-full py-5 rounded-lg `}
               key={item.notificationId}
               onClick={() => alert("not implemented")}
             >

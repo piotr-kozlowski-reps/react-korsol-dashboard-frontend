@@ -236,6 +236,9 @@ function App() {
     <div className={currentMode === "Dark" ? "dark" : ""}>
       <QueryClientProvider client={queryClient}>
         <Fragment>
+          <div id="loading-hook"></div>
+          <div id="backdrop-hook"></div>
+          <div id="modal-hook"></div>
           {!isLoggedIn && <Login authenticate={authenticate} />}
           {isLoggedIn && (
             <Fragment>
