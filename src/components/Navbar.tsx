@@ -70,11 +70,11 @@ const Navbar = ({
   const { currentColor } = useThemeProvider();
 
   ////fetching data
-  const { data, isFetching, isError, error } = useConfigGetData();
+  const { data, isLoading, isError, error } = useConfigGetData();
   const dataTyped = data;
 
   let content = <div>NavBar</div>;
-  if (dataTyped && isFetching) {
+  if (dataTyped && isLoading) {
     content = (
       <motion.div
         className="flex justify-between p-2 md: mx-6 relative animate-pulse"
@@ -127,7 +127,7 @@ const Navbar = ({
       </motion.div>
     );
   }
-  if (dataTyped && !isFetching) {
+  if (dataTyped && !isLoading) {
     content = (
       <motion.div
         className="flex justify-between p-2 md: mx-6 relative"

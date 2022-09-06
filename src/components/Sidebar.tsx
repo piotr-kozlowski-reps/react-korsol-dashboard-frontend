@@ -31,9 +31,11 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
   const { currentColor } = useThemeProvider();
 
   ////fetching data
-  const { data, isFetching, isError, error } = useConfigGetData();
+  const { data, isFetching, isLoading, isError, error } = useConfigGetData();
 
   const dataTyped = data;
+
+  // console.log(dataTyped);
 
   ////logic
   const handleCloseSideBar = () => {
@@ -48,7 +50,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
     "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-md text-gray-600 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2 cursor-pointer uppercase font-medium";
 
   let content = <div>loading sidebar data...</div>;
-  if (dataTyped && !isFetching) {
+  if (dataTyped && !isLoading) {
     content = (
       <motion.div
         className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10"
@@ -129,7 +131,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
         )}
       </motion.div>
     );
-    if (dataTyped && isFetching) {
+    if (dataTyped && isLoading) {
       content = (
         <motion.div
           className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 animate-pulse"

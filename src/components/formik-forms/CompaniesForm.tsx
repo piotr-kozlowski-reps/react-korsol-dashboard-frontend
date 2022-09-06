@@ -170,8 +170,6 @@ const CompaniesForm = ({
               : t("common:edit-company")
           }
           onCancel={() => onCancel(false)}
-          // headerClass={props.headerClass ? props.headerClass : ""}
-          // show={!!props.error}
           show={true}
         >
           <Formik

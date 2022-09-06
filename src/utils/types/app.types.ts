@@ -36,7 +36,7 @@ export interface Link {
   name: string;
   route: string;
   reactIcon: string;
-  api_route: string;
+  // api_route: string;
 }
 
 export interface LinksGroups {
