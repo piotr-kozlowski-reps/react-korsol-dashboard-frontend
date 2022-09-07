@@ -36,6 +36,7 @@ import Planters from "./pages/Planters";
 import { Tooltip } from "@material-tailwind/react";
 import { tooltipMain } from "./utils/materialTailwind";
 import Companies from "./pages/Companies";
+import Greenhouses from "./pages/Greenhouses";
 
 let logoutTimer: any;
 
@@ -337,9 +338,11 @@ function App() {
                         element={<PlantVarieties />}
                       />
                       <Route path="/companies" element={<Companies />} />
-                      <Route path="/fields" element={<Fields />} />
+                      <Route path="/greenhouses" element={<Greenhouses />} />
+
+                      {/* <Route path="/fields" element={<Fields />} />
                       <Route path="/owners" element={<Owners />} />
-                      <Route path="/planters" element={<Planters />} />
+                      <Route path="/planters" element={<Planters />} /> */}
 
                       {/* apps  */}
                       {/*<Route path="/kanban" element={<Kanban />} />
