@@ -14,6 +14,10 @@ export interface GreenhouseFormValues {
   name: string;
 }
 
+export interface ProductFormValues {
+  name: string;
+}
+
 //authentication
 export interface AuthResponse {
   authToken: string;
@@ -147,6 +151,12 @@ export type Company = {
 
 //companies
 export type Greenhouse = {
+  id: string;
+  name: string;
+};
+
+//products
+export type Product = {
   id: string;
   name: string;
 };

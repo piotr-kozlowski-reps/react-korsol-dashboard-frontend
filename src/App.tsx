@@ -37,6 +37,7 @@ import { Tooltip } from "@material-tailwind/react";
 import { tooltipMain } from "./utils/materialTailwind";
 import Companies from "./pages/Companies";
 import Greenhouses from "./pages/Greenhouses";
+import Products from "./pages/Products";
 
 let logoutTimer: any;
 
@@ -339,6 +340,7 @@ function App() {
                       />
                       <Route path="/companies" element={<Companies />} />
                       <Route path="/greenhouses" element={<Greenhouses />} />
+                      <Route path="/products" element={<Products />} />
 
                       {/* <Route path="/fields" element={<Fields />} />
                       <Route path="/owners" element={<Owners />} />
