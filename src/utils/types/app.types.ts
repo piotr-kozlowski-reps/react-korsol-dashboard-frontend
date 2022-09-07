@@ -18,6 +18,16 @@ export interface ProductFormValues {
   name: string;
 }
 
+export interface VarietiesFormValues {
+  product: string;
+  variety: string;
+}
+
+export interface DropDownProductOptions {
+  key: string;
+  value: string;
+}
+
 //authentication
 export interface AuthResponse {
   authToken: string;
@@ -159,4 +169,11 @@ export type Greenhouse = {
 export type Product = {
   id: string;
   name: string;
+};
+
+//varieties
+export type Variety = {
+  id: string;
+  product: string;
+  variety: string;
 };

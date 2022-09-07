@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useThemeProvider } from "../../contexts/theme-context";
 
@@ -16,12 +16,14 @@ import { tooltipMain } from "../../utils/materialTailwind";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { AnimatePresence } from "framer-motion";
-import { Product } from "../../utils/types/app.types";
+import { Product, Variety } from "../../utils/types/app.types";
 
 import GlobalFilter from "./GlobalFilter";
 import Pagination from "./Pagination";
 import GreenhousesForm from "../formik-forms/GreenhousesForm";
 import ProductsForm from "../formik-forms/ProductsForm";
+import { useGetVarieties } from "../../hooks/useVarietiesCRUDData";
+import ErrorModal from "../ErrorModal";
 
 interface Props {
   tableData: any[];
@@ -50,8 +52,21 @@ const ProductsTable = ({ tableData, deleteItem, postItem, putItem }: Props) => {
   const { t } = useTranslation();
   const [isShowPostModal, setIsShowPostModal] = useState(false);
   const [isShowPutModal, setIsShowPutModal] = useState(false);
+  const [isShowError, setIsShowError] = useState(false);
   const [putData, setPutData] = useState<Product>({ id: "", name: "" });
   const { currentColor } = useThemeProvider();
+  const [varieties, setVarieties] = useState<Variety[]>([
+    { id: "", variety: "", product: "" },
+  ]);
+
+  ////plant varieties
+  const { data: varietiesData, isLoading } = useGetVarieties();
+
+  useEffect(() => {
+    if (varietiesData) {
+      setVarieties([...varietiesData.data]);
+    }
+  }, [varietiesData]);
 
   ////memoization
   const [columns, data] = useMemo(() => {
@@ -95,9 +110,44 @@ const ProductsTable = ({ tableData, deleteItem, postItem, putItem }: Props) => {
 
   const { globalFilter, pageIndex, pageSize } = state;
 
+  ////logic
+  function deleteWrapper(product: Product) {
+    console.log("wrapper + id: " + product);
+    console.log(varieties);
+
+    const productFound = varieties.find(
+      (variety) => variety.product === product.name
+    );
+
+    if (!productFound) {
+      deleteItem(product.id);
+      return;
+    }
+
+    //error modal
+    setIsShowError(true);
+    const timer: any = () => {
+      setTimeout(() => {
+        setIsShowError(false);
+      }, 3000);
+    };
+    timer();
+    clearTimeout(timer);
+
+    // deleteItem(id);
+  }
+
   ////jsx
   return (
     <Fragment>
+      <AnimatePresence>
+        {isShowError && (
+          <ErrorModal
+            error={t("common:cant-delete-product")}
+            onClear={() => setIsShowError(false)}
+          />
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {isShowPostModal && (
           <ProductsForm
@@ -204,7 +254,10 @@ const ProductsTable = ({ tableData, deleteItem, postItem, putItem }: Props) => {
                             <span
                               className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
                               onClick={() => {
-                                deleteItem(cell.row.original.id);
+                                deleteWrapper({
+                                  id: cell.row.original.id,
+                                  name: cell.row.original.name,
+                                });
                               }}
                             >
                               <AiOutlineDelete />

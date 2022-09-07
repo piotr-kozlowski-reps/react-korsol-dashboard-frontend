@@ -8,12 +8,18 @@ import * as Yup from "yup";
 import { v4 as uuidv4 } from "uuid";
 import { AxiosError, AxiosResponse } from "axios";
 import { UseMutateFunction, useQueryClient } from "@tanstack/react-query";
+import { useGetProducts } from "../../hooks/useProductsCRUDData";
 
 import Modal from "../Modal";
 import FormikControl from "../formik-components/FormikControl";
 import Button from "../Button";
 
-import { ProductFormValues, Product } from "../../utils/types/app.types";
+import {
+  Variety,
+  VarietiesFormValues,
+  Product,
+  DropDownProductOptions,
+} from "../../utils/types/app.types";
 import ErrorModal from "../ErrorModal";
 
 interface Props {
@@ -21,25 +27,25 @@ interface Props {
   postItem?: UseMutateFunction<
     AxiosResponse<any, any>,
     unknown,
-    Product,
+    Variety,
     unknown
   >;
   putItem?: UseMutateFunction<
     AxiosResponse<any, any>,
     unknown,
-    Product,
+    Variety,
     unknown
   >;
   isPutOrPost: "POST" | "PUT";
-  productData?: Product;
+  varietyData?: Variety;
 }
 
-const ProductsForm = ({
+const VarietiesForm = ({
   onCancel,
   postItem,
   putItem,
   isPutOrPost,
-  productData,
+  varietyData,
 }: Props) => {
   ////vars
   const { t } = useTranslation();
@@ -47,47 +53,81 @@ const ProductsForm = ({
   const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState("");
   const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
+  const [products, setProducts] = useState<Product[]>([
+    {
+      id: "loading...",
+      name: "loading...",
+    },
+  ]);
 
-  const existingId: string = productData ? productData.id : "";
-
+  ////products
+  const { data, isLoading } = useGetProducts();
   useEffect(() => {
-    if (isPutOrPost === "PUT") {
-      alert(
-        "One to many w bazie, do ogarnięcia po stronie backendu. Teraz edytowanie nazwy produktu na tymczasowym backendzie, nie zmienia nazwy produktu w odmianach."
-      );
+    if (data) {
+      setProducts([...data.data]);
     }
-  }, []);
+  }, [data]);
+
+  const existingId: string = varietyData ? varietyData.id : "";
+
+  const optionsGenerated: DropDownProductOptions[] = products.map((product) => {
+    return { key: product.name, value: product.name };
+  });
+  const dropDownOptions: DropDownProductOptions[] = [
+    { key: t("common:choose-product"), value: "" },
+    ...optionsGenerated,
+  ];
 
   ////formik
-  const isPutAndHaveAllDesiredData = isPutOrPost === "PUT" && productData;
+  const isPutAndHaveAllDesiredData = isPutOrPost === "PUT" && varietyData;
 
-  const initialValuesProductForm: ProductFormValues = isPutAndHaveAllDesiredData
-    ? { name: productData.name }
-    : { name: "" };
+  const initialValuesVarietiesForm: VarietiesFormValues =
+    isPutAndHaveAllDesiredData
+      ? { product: varietyData.product, variety: varietyData.variety }
+      : { product: "", variety: "" };
   const validationSchema = Yup.object({
-    name: Yup.string().required(t("common:productNameRequired")),
+    variety: Yup.string().required(t("common:varietyNameRequired")),
+    product: Yup.mixed().test(
+      "products within desired array",
+      t("common:varietyProductRequired"),
+      (value) => {
+        if (!value) return false;
+
+        if (Object.prototype.toString.call(value) !== "[object String]")
+          return false;
+
+        const isValueWithinProductsArray = products.find((product) => {
+          return product.name === value;
+        });
+
+        return isValueWithinProductsArray ? true : false;
+      }
+    ),
   });
+
   const submitHandler = async (
-    values: ProductFormValues,
-    formikHelpers: FormikHelpers<ProductFormValues>
+    values: VarietiesFormValues,
+    formikHelpers: FormikHelpers<VarietiesFormValues>
   ) => {
-    const productBodyWithoutId: ProductFormValues = {
-      name: values.name,
+    const varietytBodyWithoutId: VarietiesFormValues = {
+      product: values.product,
+      variety: values.variety,
     };
 
     //version POST
     if (isPutOrPost === "POST" && postItem) {
-      const productBody: Product = {
-        ...productBodyWithoutId,
+      const varietyBody: Variety = {
+        ...varietytBodyWithoutId,
         id: uuidv4(),
       };
 
-      postItem(productBody, {
+      ////TODO: check if Product is within available Products
+
+      postItem(varietyBody, {
         onSuccess: () => {
-          console.log("onSuccess");
           formikHelpers.setSubmitting(false);
           formikHelpers.resetForm();
-          queryClient.invalidateQueries(["products"]);
+          queryClient.invalidateQueries(["varieties"]);
           onCancel(false);
         },
         onError: (error) => {
@@ -118,17 +158,17 @@ const ProductsForm = ({
 
     //version PUT
     if (isPutOrPost === "PUT" && putItem) {
-      const productBody: Product = {
-        ...productBodyWithoutId,
+      const varietyBody: Variety = {
+        ...varietytBodyWithoutId,
         id: existingId,
       };
 
-      putItem(productBody, {
+      putItem(varietyBody, {
         onSuccess: () => {
           console.log("onSuccess");
           formikHelpers.setSubmitting(false);
           formikHelpers.resetForm();
-          queryClient.invalidateQueries(["products"]);
+          queryClient.invalidateQueries(["varieties"]);
           onCancel(false);
         },
         onError: (error) => {
@@ -174,19 +214,19 @@ const ProductsForm = ({
         <Modal
           header={
             isPutOrPost === "POST"
-              ? t("common:add-product")
-              : t("common:edit-product")
+              ? t("common:add-variety")
+              : t("common:edit-variety")
           }
           onCancel={() => onCancel(false)}
           show={true}
         >
           <Formik
-            initialValues={initialValuesProductForm}
+            initialValues={initialValuesVarietiesForm}
             onSubmit={submitHandler}
             validationSchema={validationSchema}
             validateOnMount={true}
           >
-            {(formik: FormikProps<ProductFormValues>) => {
+            {(formik: FormikProps<VarietiesFormValues>) => {
               return (
                 <Form>
                   <div className="flex flex-col justify-center items-center">
@@ -194,10 +234,20 @@ const ProductsForm = ({
                       <FormikControl
                         control="input"
                         type="text"
-                        label={`${t("common:name")}:`}
-                        name="name"
-                        placeholder={t("common:productNamePlaceholder")}
+                        label={`${t("common:variety")}:`}
+                        name="variety"
+                        placeholder={t("common:varietyNamePlaceholder")}
                         additionalClass=""
+                      />
+                    </div>
+
+                    <div className="w-full pr-6">
+                      <FormikControl
+                        control="select"
+                        label={`${t("common:product")}: `}
+                        name="product"
+                        additionalClass=""
+                        options={dropDownOptions}
                       />
                     </div>
 
@@ -239,4 +289,4 @@ const ProductsForm = ({
   );
 };
 
-export default ProductsForm;
+export default VarietiesForm;

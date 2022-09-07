@@ -187,7 +187,7 @@ const GreenhousesForm = ({
                         type="text"
                         label={`${t("common:name")}:`}
                         name="name"
-                        placeholder={t("common:companyNamePlaceholder")}
+                        placeholder={t("common:greenhouseNamePlaceholder")}
                         additionalClass=""
                       />
                     </div>
