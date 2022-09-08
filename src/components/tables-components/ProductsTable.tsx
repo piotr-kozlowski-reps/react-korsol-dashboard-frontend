@@ -75,6 +75,25 @@ const ProductsTable = ({ tableData, deleteItem, postItem, putItem }: Props) => {
         Header: t("common:products"),
         accessor: "name",
       },
+      {
+        id: "utility_column",
+        Header: () => (
+          <div
+            onClick={() => setIsShowPostModal(true)}
+            className="text-white dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer p-2"
+          >
+            <Tooltip
+              content={t("common:add")}
+              placement="bottom"
+              {...tooltipMain}
+            >
+              <span className="">
+                <IoMdAdd />
+              </span>
+            </Tooltip>
+          </div>
+        ),
+      },
     ];
     return [columns, tableData];
   }, [tableData, t]);
@@ -178,38 +197,24 @@ const ProductsTable = ({ tableData, deleteItem, postItem, putItem }: Props) => {
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="py-3 dark:bg-gray-700 bg-gray-400 text-white rounded-xl"
+                  className={`py-3 dark:bg-gray-700 bg-gray-400 text-white rounded-xl text-center ${
+                    column.id === "utility_column" ? "w-4" : "w-full"
+                  }`}
                 >
                   <div className="flex justify-center items-center">
-                    <div className="flex-grow">
-                      <div className="flex justify-center items-center">
-                        <div>{column.render("Header")}</div>
-                        <div className="ml-2">
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <TbArrowBarToUp />
-                            ) : (
-                              <TbArrowBarDown />
-                            )
+                    <div className="flex justify-center items-center">
+                      <div>{column.render("Header")}</div>
+                      <div className="">
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <TbArrowBarToUp />
                           ) : (
-                            ""
-                          )}
-                        </div>
+                            <TbArrowBarDown />
+                          )
+                        ) : (
+                          ""
+                        )}
                       </div>
-                    </div>
-                    <div
-                      onClick={() => setIsShowPostModal(true)}
-                      className="text-white dark:text-gray-200 dark:hover:text-black hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer p-2 mr-4"
-                    >
-                      <Tooltip
-                        content={t("common:add")}
-                        placement="bottom"
-                        {...tooltipMain}
-                      >
-                        <span className="">
-                          <IoMdAdd />
-                        </span>
-                      </Tooltip>
                     </div>
                   </div>
                 </th>
@@ -229,41 +234,46 @@ const ProductsTable = ({ tableData, deleteItem, postItem, putItem }: Props) => {
                   return (
                     <td {...cell.getCellProps()} className="py-3 rounded-xl">
                       <div className="flex justify-center items-center">
-                        <div className="flex-grow">{cell.render("Cell")}</div>
-                        <div className="flex justify-center items-center">
-                          <Tooltip
-                            content={t("common:edit")}
-                            placement="bottom"
-                            {...tooltipMain}
-                          >
-                            <span
-                              className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
-                              onClick={() => {
-                                setPutData(cell.row.original);
-                                setIsShowPutModal(true);
-                              }}
+                        {cell.column.id !== "utility_column" && (
+                          <div className="flex-grow">{cell.render("Cell")}</div>
+                        )}
+
+                        {cell.column.id === "utility_column" && (
+                          <div className="flex justify-center items-center">
+                            <Tooltip
+                              content={t("common:edit")}
+                              placement="bottom"
+                              {...tooltipMain}
                             >
-                              <AiOutlineEdit />
-                            </span>
-                          </Tooltip>
-                          <Tooltip
-                            content={t("common:delete")}
-                            placement="bottom"
-                            {...tooltipMain}
-                          >
-                            <span
-                              className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
-                              onClick={() => {
-                                deleteWrapper({
-                                  id: cell.row.original.id,
-                                  name: cell.row.original.name,
-                                });
-                              }}
+                              <span
+                                className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
+                                onClick={() => {
+                                  setPutData(cell.row.original);
+                                  setIsShowPutModal(true);
+                                }}
+                              >
+                                <AiOutlineEdit />
+                              </span>
+                            </Tooltip>
+                            <Tooltip
+                              content={t("common:delete")}
+                              placement="bottom"
+                              {...tooltipMain}
                             >
-                              <AiOutlineDelete />
-                            </span>
-                          </Tooltip>
-                        </div>
+                              <span
+                                className="p-2 text-gray-600 dark:text-gray-200 dark:hover:text-black group-hover:text-black hover:bg-white hover:shadow-lg rounded-lg cursor-pointer"
+                                onClick={() => {
+                                  deleteWrapper({
+                                    id: cell.row.original.id,
+                                    name: cell.row.original.name,
+                                  });
+                                }}
+                              >
+                                <AiOutlineDelete />
+                              </span>
+                            </Tooltip>
+                          </div>
+                        )}
                       </div>
                     </td>
                   );
