@@ -30,7 +30,7 @@ interface ModalProps {
 const ModalOverlay = (props: ModalOverlayProps) => {
   const content = (
     <motion.div
-      className={`z-50 fixed top-1/4 left-1/4 w-1/2 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-4 pt-6 rounded-2xl px-8 shadow-xl ${
+      className={`z-50 fixed top-1/4 w-11/12 left-5 md:ml-0 md:left-1/4 md:right-1/4 md:w-1/2 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-4 pt-6 rounded-2xl px-8 shadow-xl ${
         props.className ? props.className : ""
       }`}
       style={props.style}

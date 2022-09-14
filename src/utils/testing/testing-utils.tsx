@@ -4,6 +4,7 @@ import { rest } from "msw";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18nForTests";
+import { BrowserRouter } from "react-router-dom";
 
 //dummy
 import { dummyConfigData } from "./mock-api-data";
@@ -26,9 +27,11 @@ const createTestQueryClient = () =>
 export function renderWithClient(ui: React.ReactElement) {
   const testQueryClient = createTestQueryClient();
   const { rerender, ...result } = render(
-    <QueryClientProvider client={testQueryClient}>
-      <I18nextProvider i18n={i18n}>{ui}</I18nextProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={testQueryClient}>
+        <I18nextProvider i18n={i18n}>{ui}</I18nextProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
   return {
     ...result,

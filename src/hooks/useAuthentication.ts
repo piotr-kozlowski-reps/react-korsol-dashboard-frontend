@@ -1,35 +1,33 @@
-import { useState } from "react";
-import { AuthResponse } from "../utils/types/app.types";
+import { Dispatch, SetStateAction, useState } from "react";
 import jwt_decode from "jwt-decode";
+import { TokenInternalData } from "../utils/types/app.types";
+import { getDataFromLocalStorage } from "../utils/localStorageUtils";
+
+// import { AuthResponse } from "../utils/types/app.types";
 
 interface AuthenticationReturnInterface {
   isLoggedIn: boolean;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+  token: string | undefined;
+  setToken: Dispatch<SetStateAction<string | undefined>>;
+  tokenExpirationDate: Date | undefined;
+  setTokenExpirationDate: Dispatch<SetStateAction<Date | undefined>>;
+  userId: string;
+  setUserId: Dispatch<SetStateAction<string>>;
   authenticate: (tokenPassed: string) => void;
 }
 
-/**
- *
- * to stare authenticate
- * nie używane już
- * potem wywalić
- */
-
+/** Hook for managing global state of Authentication */
 export const useAuthentication = (): AuthenticationReturnInterface => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState<string | undefined>(undefined);
   const [tokenExpirationDate, setTokenExpirationDate] = useState<
     Date | undefined
   >(undefined);
-  const [userId, setUserId] = useState<string | undefined>(undefined);
+  const [userId, setUserId] = useState("");
 
-  interface TokenInternalData {
-    userId: string;
-    expirationDate: string;
-    iat: number;
-  }
-
+  //logic
   const authenticate = (tokenPassed: string) => {
-    debugger;
     const decoded: TokenInternalData | undefined = jwt_decode(tokenPassed);
     if (!decoded)
       throw new Error(`Couldn't decode token, it seems to have bad format.`);
@@ -49,6 +47,13 @@ export const useAuthentication = (): AuthenticationReturnInterface => {
       throw new Error(`Couldn't decode token, it seems to have bad format.`);
     }
 
+    // console.log(
+    //   "expirationDateExtractedFromToken.toISOString()",
+    //   expirationDateExtractedFromToken.toISOString()
+    // );
+    // console.log({ tokenPassed });
+    // console.log({ userIdExtractedFromToken });
+
     //localStorage - start
     localStorage.setItem(
       "userData",
@@ -62,16 +67,24 @@ export const useAuthentication = (): AuthenticationReturnInterface => {
     //localStorage - end
 
     //context - start
-    if (userIdExtractedFromToken) {
+    if (userIdExtractedFromToken && getDataFromLocalStorage()) {
       setUserId(userIdExtractedFromToken);
+      setToken(tokenPassed);
+      setTokenExpirationDate(expirationDateExtractedFromToken);
+      setIsLoggedIn(true);
     }
-    setToken(tokenPassed);
-    setTokenExpirationDate(expirationDateExtractedFromToken);
-    setIsLoggedIn(true);
     //context - end
   };
+
   return {
     isLoggedIn,
+    setIsLoggedIn,
+    token,
+    setToken,
+    tokenExpirationDate,
+    setTokenExpirationDate,
+    userId,
+    setUserId,
     authenticate,
   };
 };

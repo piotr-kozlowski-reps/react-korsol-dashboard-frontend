@@ -118,7 +118,7 @@ const CompaniesTable = ({
 
   const { globalFilter, pageIndex, pageSize } = state;
 
-  console.log(pageOptions.length);
+  // console.log(pageOptions.length);
 
   ////jsx
   return (

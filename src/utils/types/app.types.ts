@@ -126,6 +126,12 @@ export interface DashboardFetchedStackedData {
   stackedCustomSeries: any[];
 }
 
+export interface TokenInternalData {
+  userId: string;
+  expirationDate: string;
+  iat: number;
+}
+
 //plant-varities
 export type PlantVariety = {
   plantId: string;

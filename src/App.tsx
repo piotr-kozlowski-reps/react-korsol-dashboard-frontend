@@ -3,13 +3,14 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import jwt_decode from "jwt-decode";
 import { useTranslation } from "react-i18next";
 import { FiSettings } from "react-icons/fi";
 import { useThemeProvider } from "./contexts/theme-context";
+import { useThemeGlobal } from "./hooks/useThemeGlobal";
 import { getDataFromLocalStorage } from "./utils/localStorageUtils";
 import { themeColors } from "./data/theme-colors";
 import { AnimatePresence } from "framer-motion";
+import { useAuthentication } from "./hooks/useAuthentication";
 
 import UserProfile from "./components/UserProfile";
 
@@ -29,10 +30,6 @@ import "./i18n";
 import Notifications from "./components/Notifications";
 import ThemeSettings from "./components/ThemeSettings";
 import Dashboard from "./pages/Dashboard";
-import PlantVarieties from "./pages/PlantVarieties";
-import Fields from "./pages/Fields";
-import Owners from "./pages/Owners";
-import Planters from "./pages/Planters";
 import { Tooltip } from "@material-tailwind/react";
 import { tooltipMain } from "./utils/materialTailwind";
 import Companies from "./pages/Companies";
@@ -44,111 +41,39 @@ let logoutTimer: any;
 
 export const queryClient = new QueryClient();
 
-////interfaces
-interface TokenInternalData {
-  userId: string;
-  expirationDate: string;
-  iat: number;
-}
-
 function App() {
   ////vars
   const { t } = useTranslation();
   const { currentColor, setCurrentColor } = useThemeProvider();
 
   ////state
-  ////temporary authentication not in custom hook - start
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | undefined>(undefined);
-  const [tokenExpirationDate, setTokenExpirationDate] = useState<
-    Date | undefined
-  >(undefined);
-  const [userId, setUserId] = useState("");
+  ////authentication global data
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    token,
+    setToken,
+    tokenExpirationDate,
+    setTokenExpirationDate,
+    userId,
+    setUserId,
+    authenticate,
+  } = useAuthentication();
 
-  const authenticate = (tokenPassed: string) => {
-    const decoded: TokenInternalData | undefined = jwt_decode(tokenPassed);
-    if (!decoded)
-      throw new Error(`Couldn't decode token, it seems to have bad format.`);
-
-    console.log({ decoded });
-
-    let expirationDateExtractedFromToken: Date = new Date();
-    let userIdExtractedFromToken: string | undefined = undefined;
-    if (
-      typeof decoded === "object" &&
-      "expirationDate" in decoded &&
-      "userId" in decoded
-    ) {
-      expirationDateExtractedFromToken = new Date(decoded.expirationDate); //TODO: regex sprawdzający czy ma dobry format
-      userIdExtractedFromToken = decoded.userId;
-    } else {
-      throw new Error(`Couldn't decode token, it seems to have bad format.`);
-    }
-
-    // console.log(
-    //   "expirationDateExtractedFromToken.toISOString()",
-    //   expirationDateExtractedFromToken.toISOString()
-    // );
-    // console.log({ tokenPassed });
-    // console.log({ userIdExtractedFromToken });
-
-    //localStorage - start
-    localStorage.setItem(
-      "userData",
-      JSON.stringify({
-        isLoggedIn: true,
-        expirationDate: expirationDateExtractedFromToken.toISOString(),
-        token: tokenPassed,
-        userId: userIdExtractedFromToken,
-      })
-    );
-    //localStorage - end
-
-    //context - start
-    if (userIdExtractedFromToken && getDataFromLocalStorage()) {
-      setUserId(userIdExtractedFromToken);
-      setToken(tokenPassed);
-      setTokenExpirationDate(expirationDateExtractedFromToken);
-      setIsLoggedIn(true);
-    }
-    //context - end
-  };
-  const logoutAndClearLocalStorageAndAllStateElements = () => {
-    //localStorage
-    localStorage.removeItem("userData");
-    //state
-    handleClickOff("userProfile");
-    setTokenExpirationDate(undefined);
-    setToken(undefined);
-    setUserId("");
-    setIsLoggedIn(false);
-  };
-  ////temporary authentication not in custom hook - end
-
-  ////temporary theme not in custom hook - start
-  const initialState: NavbarMenuIsClicked = {
-    userProfile: false,
-    notification: false,
-  };
-
-  const [isClicked, setIsClicked] = useState(initialState);
-  const [activeMenu, setActiveMenu] = useState(true);
-  const [themeSettings, setThemeSettings] = useState(false);
-  const [screenSize, setScreenSize] = useState<number | undefined>(undefined);
-  const [currentMode, setCurrentMode] = useState<"Light" | "Dark">("Light");
-
-  const handleClickOn = (clicked: WhichMenuItemClicked) => {
-    setIsClicked({ ...initialState, [clicked]: true });
-  };
-  const handleClickOff = (clicked: WhichMenuItemClicked) => {
-    setIsClicked({ ...initialState, [clicked]: false });
-  };
-  const setMode = (e: any) => {
-    setCurrentMode(e.target.value);
-    localStorage.setItem("themeMode", e.target.value);
-    setThemeSettings(false);
-  };
-  ////temporary theme not in custom hook - end
+  ////theme global data
+  const {
+    isClicked,
+    setIsClicked,
+    handleClickOn,
+    handleClickOff,
+    currentMode,
+    setCurrentMode,
+    activeMenu,
+    setActiveMenu,
+    themeSettings,
+    setThemeSettings,
+    setMode,
+  } = useThemeGlobal();
 
   ////logic
   //check if logged in via LocalStorage "userData" data (checking also if data haven't expired)
@@ -191,7 +116,19 @@ function App() {
   // }, [token, tokenExpirationDate, logoutPostponed]);
   //TODO: go back here and check the logout logic
 
+  const logoutAndClearLocalStorageAndAllStateElements = () => {
+    //localStorage
+    localStorage.removeItem("userData");
+    //state
+    handleClickOff("userProfile");
+    setTokenExpirationDate(undefined);
+    setToken(undefined);
+    setUserId("");
+    setIsLoggedIn(false);
+  };
+
   //screenSize
+  const [screenSize, setScreenSize] = useState<number | undefined>(undefined);
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
     window.addEventListener("resize", handleResize);
@@ -334,19 +271,11 @@ function App() {
                       />
                       <Route path="/dashboard/" element={<Dashboard />} />
 
-                      {/* monitoring  */}
-                      <Route
-                        path="/plant_varieties"
-                        element={<PlantVarieties />}
-                      />
+                      {/* dictionaries  */}
                       <Route path="/companies" element={<Companies />} />
                       <Route path="/greenhouses" element={<Greenhouses />} />
                       <Route path="/products" element={<Products />} />
                       <Route path="/varieties" element={<Varieties />} />
-
-                      {/* <Route path="/fields" element={<Fields />} />
-                      <Route path="/owners" element={<Owners />} />
-                      <Route path="/planters" element={<Planters />} /> */}
 
                       {/* apps  */}
                       {/*<Route path="/kanban" element={<Kanban />} />

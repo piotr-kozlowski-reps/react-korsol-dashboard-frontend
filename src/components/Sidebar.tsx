@@ -62,7 +62,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
         {activeMenu && (
           <Fragment>
             <div className="flex justify-between items-center">
-              <Link to="/dashboard">
+              <Link to="/dashboard" title="dashboard">
                 <div
                   onClick={handleCloseSideBar}
                   className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900 cursor-pointer"
@@ -116,6 +116,7 @@ const Sidebar = ({ userId, activeMenu, setActiveMenu, screenSize }: Props) => {
                         className={({ isActive }) =>
                           isActive ? activeLink : normalLink
                         }
+                        title={`${link.route}`}
                       >
                         <SVGStringIntoComponentMaker
                           keyToMap={link.reactIcon}
