@@ -36,6 +36,7 @@ import Companies from "./pages/Companies";
 import Greenhouses from "./pages/Greenhouses";
 import Products from "./pages/Products";
 import Varieties from "./pages/Varieties";
+import CompaniesForGlobalTable from "./pages/CompaniesForGlobalTable";
 
 let logoutTimer: any;
 
@@ -272,7 +273,11 @@ function App() {
                       <Route path="/dashboard/" element={<Dashboard />} />
 
                       {/* dictionaries  */}
-                      <Route path="/companies" element={<Companies />} />
+                      {/* <Route path="/companies" element={<Companies />} /> */}
+                      <Route
+                        path="/companies"
+                        element={<CompaniesForGlobalTable />}
+                      />
                       <Route path="/greenhouses" element={<Greenhouses />} />
                       <Route path="/products" element={<Products />} />
                       <Route path="/varieties" element={<Varieties />} />
